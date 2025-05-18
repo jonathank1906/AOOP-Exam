@@ -92,6 +92,70 @@ Dependency injection
 - It is a UI design pattern
 - The observer pattern is present behind anything that involves data binding.
 
+## Strategy
+It is recognized by these key features:
+1. Interface Implementation: You define an interface that represents the strategy. Each concrete class implementing this interface represents a different algorithm or strategy.
+2. Context Class: This class maintains a reference to the strategy interface. It uses this reference to execute the strategy, allowing the algorithm to be selected at runtime.
+
+``` cs
+// Strategy Interface
+public interface IStrategy
+{
+    void Execute();
+}
+
+// Concrete Strategies
+public class StrategyA : IStrategy
+{
+    public void Execute()
+    {
+        Console.WriteLine("Executing Strategy A");
+    }
+}
+
+public class StrategyB : IStrategy
+{
+    public void Execute()
+    {
+        Console.WriteLine("Executing Strategy B");
+    }
+}
+
+// Context Class
+public class Context
+{
+    private IStrategy _strategy;
+
+    public Context(IStrategy strategy)
+    {
+        _strategy = strategy;
+    }
+
+    public void SetStrategy(IStrategy strategy)
+    {
+        _strategy = strategy;
+    }
+
+    public void ExecuteStrategy()
+    {
+        _strategy.Execute();
+    }
+}
+
+// Usage
+public class Program
+{
+    public static void Main()
+    {
+        Context context = new Context(new StrategyA());
+        context.ExecuteStrategy(); // Output: Executing Strategy A
+
+        context.SetStrategy(new StrategyB());
+        context.ExecuteStrategy(); // Output: Executing Strategy B
+    }
+}
+```
+
 ## Dependency Injection
 - You don’t instantiate stuff inside of a class, but outside of a class and then you give it to the class. Meaning, you inject the dependency of the class from outside.
 
