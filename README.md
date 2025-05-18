@@ -46,7 +46,9 @@ Implemented using:
 ## Inheritance
 
 ## Polymorphism
-### Method Overriding
+### Method Overriding (Run-Time Polymorphism)
+
+### Method Overloading (Compile-Time Polymorphism)
 
 Implemented using:
 
@@ -448,6 +450,11 @@ Bindings in the view follow:
 The ObservableProperty or variables should start:
 - Lowercase first letter/word, then uppercase for all words after. 
 
+
+# Unit Testing and Avalonia Headless Testing
+To setup Xunit testing:
+- Have 2 folders
+- 1 folder with the name of the other folder + .Tests
 
 # Multithreading
 ## Async
