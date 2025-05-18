@@ -446,3 +446,64 @@ Bindings in the view follow:
 
 The ObservableProperty or variables should start:
 - Lowercase first letter/word, then uppercase for all words after. 
+
+
+# Multithreading
+## Async
+What does asynchronous mean? Performing several tasks at once    
+Synchronous means performing only one task at a time.
+
+``` cs
+using System;
+using System.Threading.Tasks;
+using System.Threading;
+
+private async Task doSomethingAsync()
+{
+    await TaskAsync();
+}
+
+private Task TaskAsync()
+{
+    Task task = Task.Run(() =>
+    {
+        for (int i = 0; i < 10; i++)
+        {
+            Console.WriteLine($"Task {i}");
+            Thread.Sleep(100);
+        }   
+    });
+    return task;
+}
+```
+### Await
+- Methods are set as asynchronous because it might take time to execute. The await inside it ensures the method doesn’t block the UI while it runs. 
+    - The `await` keyword provides a nonblocking way to start a task, then continue execution when the task completes.
+
+### Task
+Simple task
+Call `Task.Run()`
+
+`task.Wait();`
+
+### Avalonia UI thread (updating the UI)
+- Dont update the UI from a different thread. Everytime you asynchronously do something in a seperate thread and you want to change something in the UI, you should explicitly go back to the UI thread. In other words, you should not change something about the UI from outside of the UI Thread.
+
+``` cs
+public async Task Update(int d1, int d2, int count)
+{
+    await Dispatcher.UIThread.InvokeAsync( () =>
+    {
+        DieOneImage = _images[d1 - 1];
+        DieTwoImage = _images[d2 - 1];
+        Result = count;
+    });
+}
+```
+
+``` cs
+Dispatcher.UIThread.Post(() => SetText(text));
+
+// Start the job on the ui thread and wait for the result.
+var result = await Dispatcher.UIThread.InvokeAsync(GetText);
+```
