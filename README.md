@@ -56,7 +56,6 @@ Implemented using:
 
 
 # Interfaces
----
 
 **Interfaces** define contracts for behavior, but without implementing that behavior.
 - Interfaces
@@ -65,7 +64,6 @@ Implemented using:
 
 
 # Design Patterns
----
 
 There are 3 categories of design patterns:
 1. Creational
@@ -96,5 +94,46 @@ Dependency injection
 
 ## Dependency Injection
 - You don’t instantiate stuff inside of a class, but outside of a class and then you give it to the class. Meaning, you inject the dependency of the class from outside.
+
+
+# Parsing JSON and CSV
+``` cs
+/* !!!!!!!! Preliminary Step: Install CSV helper with the NuGet command!!!!!! 
+- In either case of a console application or Avalonia app,
+you will need to check if CSVhelper exists in the .csproj file. 
+*/
+
+
+// Step 1: Prepare the data
+using CSVHelper;
+using CsvHelper.Configuration.Attributes;
+
+public class Comic
+{
+    [Name("Title")]
+    public string Title { get; set; } = string.Empty;
+    
+    [Name("Author")]
+    public string Author { get; set; } = string.Empty;
+    
+    [Name("ReleaseYear")]
+    public int Year { get; set; }
+}
+
+// Step 2: Read data using CsvReader
+/*
+Inputs:
+- String filepath
+
+Outputs:
+- Data
+
+*/
+
+
+
+// Step 3 (optional): Write data using CsvWriter
+```
+
 
 
