@@ -1,5 +1,3 @@
-# AOOP-Exam
-
 # Table of contents
 - [Object-Oriented Analysis](#object-oriented-analysis)
   - [OO Principles](#oo-principles)
