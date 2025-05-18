@@ -136,4 +136,54 @@ Outputs:
 ```
 
 
+# LINQ
+What is a Query?
+- Stands for Language Integrated Query
+- Used for data manipulation.
+- A query is essentially a question you ask about your data set about. It 
+has to be in a certain order that you formulate the quesstion.
+If there is x amount of students enrolled in a
+a class/ 
+
+They can be applied to Lists, databases.....
+
+A dataset can be seen below
+- The rows represent single objects inside of the collection
+- The columns represent the fields of the objects.
+
+``` cs
+public class Product
+{
+    public int Id { get; set; }
+    public string Name { get; set; }
+    public decimal Price { get; set; }
+    public string Category { get; set; }
+}
+
+List<Product> products =
+[
+    new Product
+    { Id = 1, Name = "Laptop", Price = 899.99m, Category = "Electronics" },
+    new Product
+    { Id = 2, Name = "Smartphone", Price = 599.99m, Category = "Electronics" },
+    new Product
+    { Id = 3, Name = "Tablet", Price = 499.99m, Category = "Electronics" },
+    new Product
+    { Id = 4, Name = "Shoes", Price = 59.99m, Category = "Apparel" }
+];
+```
+
+Two syntaxes for LINQ queries:
+1. Method chaining
+2. Query syntax
+* You can always mix these syntaxes in your code. No restrictions on that!
+
+**Method Chaining Syntax**
+- Uses a . before the LINQ method (where, orderby, select, etc.)
+``` cs
+var output = books.Where(condition)  
+                  .OrderBy(property)  
+                  .Select(property);
+*/
+```
 
