@@ -54,6 +54,16 @@ Implemented using:
 - Interfaces
 - Types
 
+
+# Interfaces
+---
+
+**Interfaces** define contracts for behavior, but without implementing that behavior.
+- Interfaces
+- Interfaces are indicated by the 'inteface' keyword.
+
+
+
 # Design Patterns
 ---
 
@@ -86,3 +96,5 @@ Dependency injection
 
 ## Dependency Injection
 - You don’t instantiate stuff inside of a class, but outside of a class and then you give it to the class. Meaning, you inject the dependency of the class from outside.
+
+
