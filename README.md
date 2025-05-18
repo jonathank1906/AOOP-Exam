@@ -31,10 +31,10 @@
 
 # OO Principles
 ## Abstraction
-
-Implemented using:
-
+Abstraction is the idea of hiding complexity.
+Abstract classes are one way to achieve it (other ways to it can be implemented: 
 - Interfaces
+- Encapsulation
 
 ## Encapsulation
 
