@@ -370,3 +370,17 @@ Console.WriteLine(args["Alice"]);
 
 // Hashset
 ```
+
+# Data-Binding
+
+Pre-check:
+- The ViewModelBase.cs (located inside the ViewModels folder) should inherit from either observableobject or reactiveui
+- Each viewmodel should inherit from viewmodelbase
+
+
+
+Bindings in the view follow:
+- Capital (first letter/word and all words)
+
+The ObservableProperty or variables should start:
+- Lowercase first letter/word, then uppercase for all words after. 
