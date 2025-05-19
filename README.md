@@ -161,7 +161,7 @@ public class Program
 - You don’t instantiate stuff inside of a class, but outside of a class and then you give it to the class. Meaning, you inject the dependency of the class from outside.
 
 # File Handling (Read and Write)
-## Reading from a File
+Reading from a File  
 The StreamReader class can be used to read data from a file. The code below demonstrates how to read all lines from a text file using StreamReader:
 ``` cs
 using (StreamReader reader = new StreamReader("file.txt"))
@@ -171,6 +171,15 @@ using (StreamReader reader = new StreamReader("file.txt"))
     {
         Console.WriteLine(line);
     }
+}
+```
+
+Writing to a File  
+The StreamWriter class can be used to write data to a file. The code below demonstrates how to write a string to a text file using StreamWriter:
+``` cs
+using (StreamWriter writer = new StreamWriter("file.txt"))
+{
+    writer.WriteLine("Hello, world!");
 }
 ```
 
