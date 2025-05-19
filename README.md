@@ -60,6 +60,20 @@ Implemented using:
 
 **Interfaces** define contracts for behavior, but without implementing that behavior.
 
+# SOLID Principles
+## S
+- A class should oonly have 1 reason/place where it can change.
+- 	If a class has 2 places where it can change then it voilates s
+- it can be reslved by splotting it into a SEPERATE class COVERT it to some business logic or service.
+
+## O
+- Encoursges abstraction and polymorphism to achieve this. inheritance or composition
+
+1. Create an abstract class.
+2. Create normal classes that inherit from this abstract class.
+	3. Each of these individual classes will override the method from the abstract class, which allows the class to provide its own implementation.
+
+
 
 # Design Patterns
 
