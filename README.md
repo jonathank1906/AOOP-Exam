@@ -86,9 +86,11 @@ What this solves:
 
 ## L - Liskov Substitution Principle (LSP)
 The problem:
+Similar class inherits from another class.
 
 How its solved:
-- Remove the
+- Remove the complex inheritance (the 3rd level)
+- Replace it to only have a 2nd level inheritance
 
 ## I - Interface Segregation Principle (ISP)
 
