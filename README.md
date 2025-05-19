@@ -46,6 +46,7 @@ Implemented using:
 ## Inheritance
 
 ## Polymorphism
+- Overriding can be used on properties also!
 ### Method Overriding (Run-Time Polymorphism)
 
 ### Method Overloading (Compile-Time Polymorphism)
@@ -61,19 +62,37 @@ Implemented using:
 **Interfaces** define contracts for behavior, but without implementing that behavior.
 
 # SOLID Principles
-## S
+## S - Single Responsibility Principle (SRP)
 - A class should oonly have 1 reason/place where it can change.
 - 	If a class has 2 places where it can change then it voilates s
 - it can be reslved by splotting it into a SEPERATE class COVERT it to some business logic or service.
 
-## O
+## O - Open/Closed Principle (OCP)
+Superclass: Higher up class.
+Subclass: Lower class. This inherits from the superclass.
+
+ The issue:
+ - The code has to be edited in two places if you want to add a new feature.
+
 - Encoursges abstraction and polymorphism to achieve this. inheritance or composition
 
 1. Create an abstract class.
-2. Create normal classes that inherit from this abstract class.
-	3. Each of these individual classes will override the method from the abstract class, which allows the class to provide its own implementation.
+2. Create concrete classes that inherit from this abstract class.
+	3. Each of these concrete classes will override the method from the abstract class, which allows the class to provide its own implementation.
 
+What this solves:
+- Now the Shape class does not need to be changed if a new shape is added (triangle).
+- The code becomes loosely coupled and more maintainable.
 
+## L - Liskov Substitution Principle (LSP)
+The problem:
+
+How its solved:
+- Remove the
+
+## I - Interface Segregation Principle (ISP)
+
+## D - Dependency Inversion Principle (DIP)
 
 # Design Patterns
 
