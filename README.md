@@ -59,9 +59,6 @@ Implemented using:
 # Interfaces
 
 **Interfaces** define contracts for behavior, but without implementing that behavior.
-- Interfaces
-- Interfaces are indicated by the 'inteface' keyword.
-
 
 
 # Design Patterns
