@@ -62,16 +62,20 @@ Implemented using:
 **Interfaces** define contracts for behavior, but without implementing that behavior.
 
 # SOLID Principles
+[link1](https://bool.dev/blog/detail/solid-principles)
+[video](https://www.youtube.com/watch?v=rylaiB2uH2A&t=6321s)
 ## S - Single Responsibility Principle (SRP)
+> A class should have only one reason to change. In other words, a class should only have one responsibility.
 - A class should oonly have 1 reason/place where it can change.
 - 	If a class has 2 places where it can change then it voilates s
 - it can be reslved by splotting it into a SEPERATE class COVERT it to some business logic or service.
 
 ## O - Open/Closed Principle (OCP)
+> Software entities should be open for extension but closed for modification. This means you should be able to add new functionality without altering existing code.
 Superclass: Higher up class.
 Subclass: Lower class. This inherits from the superclass.
 
- The issue:
+ The issue (violation):
  - The code has to be edited in two places if you want to add a new feature.
 
 - Encoursges abstraction and polymorphism to achieve this. inheritance or composition
@@ -85,7 +89,8 @@ What this solves:
 - The code becomes loosely coupled and more maintainable.
 
 ## L - Liskov Substitution Principle (LSP)
-The problem:
+> Objects of a superclass should be replaceable with objects of a subclass without affecting the correctness of the program.
+The problem (violation):
 Similar class inherits from another class.
 
 How its solved:
@@ -93,10 +98,40 @@ How its solved:
 - Replace it to only have a 2nd level inheritance
 
 ## I - Interface Segregation Principle (ISP)
+> Clients should not be forced to depend on interfaces they do not use.
+
+- The client is simply the classes that are using the interface.
+
+The problem (violation):
+- A class is forced to implment the methods defined in an interface. The problem arises when this class has to implement the methods it doesnt need/or that are invalid/irrelevant.
+
+The solution:
+- Implmenet seperate interfaces (nothing wrong with this)
+    - Split the larger interface into seperate more specific interfaces.
+- A class can even implement several interfaces...
 
 ## D - Dependency Inversion Principle (DIP)
+> High-level modules should not depend on low-level modules. Both should depend on abstractions.
+
+The problem (violation):
+- Tight coupling between two classes.
+
+
+Solution:
+- Implement an interface or abstraction (not a concrete implementation)
+
+What it solves:
+- Promotes loose coupling between components by removing direct dependencies (more flexibile).
+- Easier unit testing with dependency injection, by allowing components to be replaced.
+    - Dependencies can be swapped at runtime.
+
+``` cs
+var car = new Car(new Engine());
+```
+
 
 # Design Patterns
+[video](https://www.youtube.com/watch?v=rylaiB2uH2A&t=6321s)
 
 There are 3 categories of design patterns:
 1. Creational
@@ -108,18 +143,21 @@ There are 3 categories of design patterns:
 	- Command
 	- Observer
 	- Strategy
-Dependency injection
+
+*Dependency injection
 
 
 ## Singleton
-
+- A class of which only a single instance can exist
 ## Facade
+- 	A single class that represents an entire subsystem
 
 ## Bridge
 
 ## Command
 - Is part of the MVVM toolkit
 ## Observer
+- The Observer Pattern involes an object, known as the subject, maintaining a list of its dependent objects, called observers, and notifiying them automatically of any state changes.
 - It can be implemented both with and without MVVM toolkit.
 	- There is also a basic one.
 - It is a UI design pattern
@@ -216,13 +254,14 @@ using (StreamWriter writer = new StreamWriter("file.txt"))
 ```
 
 # Parsing JSON and CSV
-``` cs
+## CSV
+
 /* !!!!!!!! Preliminary Step: Install CSV helper with the NuGet command!!!!!! 
 - In either case of a console application or Avalonia app,
 you will need to check if CSVhelper exists in the .csproj file. 
 */
 
-
+``` cs
 // Step 1: Prepare the data
 using CSVHelper;
 using CsvHelper.Configuration.Attributes;
@@ -238,7 +277,9 @@ public class Comic
     [Name("ReleaseYear")]
     public int Year { get; set; }
 }
+```
 
+``` cs
 // Step 2: Read data using CsvReader
 /*
 Inputs:
@@ -253,6 +294,36 @@ Outputs:
 
 // Step 3 (optional): Write data using CsvWriter
 ```
+
+## JSON
+
+<details>
+<summary>Handling Null During Deserialization</summary>
+
+IF I DO CHECK FOR NULL DURING DESERIALIZATION  
+- It is not necessary to set to empty.
+
+IF I DON'T CHECK FOR NULL DURING DESERIALIZATION  
+Callout  
+- Strings must be set to empty  
+    - Otherwise you will see: `Error reading file: Object reference not set to an instance of an object.`  
+- `int`, `bool`, `double` can be left as is  
+
+</details>
+
+``` cs
+public class Person
+{
+    // Initialize lists to avoid null references
+    public string FirstName { get; set; } = string.Empty;
+    public string LastName { get; set; } = string.Empty;
+    public int Age { get; set; }
+    public bool IsEmployed { get; set; }
+    public List<string> Hobbies { get; set; } = new List<string>();
+}
+```
+
+
 
 
 # LINQ
@@ -427,11 +498,6 @@ foreach (var group in groupedByCategoryMethod)
 
 2. Get the average price of each group
 
-``` cs
-### **Combining Operations**
-
-2. Get the average price of each group
-```
 
 # Collections
 
