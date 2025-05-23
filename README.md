@@ -327,7 +327,7 @@ A dataset can be seen below
 - The columns represent the fields of the objects.
 
 ``` cs
-public class Product
+public class Product // Column definitions
 {
     public int Id { get; set; }
     public string Name { get; set; }
@@ -335,6 +335,7 @@ public class Product
     public string Category { get; set; }
 }
 
+// Filling the rows with data
 List<Product> products =
 [
     new Product
@@ -347,20 +348,27 @@ List<Product> products =
     { Id = 4, Name = "Shoes", Price = 59.99m, Category = "Apparel" }
 ];
 ```
-## Method & Query Syntax 
+| Id | Name       | Price  | Category    |
+|----|------------|--------|-------------|
+| 1  | Laptop     | 899.99 | Electronics |
+| 2  | Smartphone | 599.99 | Electronics |
+| 3  | Tablet     | 499.99 | Electronics |
+| 4  | Shoes      | 59.99  | Apparel     |
+
+## (Method Chaining / Lambda Syntax) & Query Syntax 
 Two syntaxes for LINQ queries:
-1. Method chaining
+1. (Method Chaining / Lambda Syntax)
 2. Query syntax
 * You can always mix these syntaxes in your code. No restrictions on that!
 
 **Method Chaining Syntax**
-- Uses a . before the LINQ method (where, orderby, select, etc.)
+- Uses a . before the method (where, orderby, select, etc.)
 ``` cs
 var output = books.Where(condition)  
                   .OrderBy(property)  
                   .Select(property);
 ```
-**LINQ Query Syntax**
+**Query Syntax**
 - Query must end with a Select or Group clause.
 
 ``` cs
@@ -522,7 +530,7 @@ foreach (var name in sortedCheapProductsMethod)
 
 
 # File Handling (Read and Write)
-Reading from a File  
+## Reading from a File  
 The StreamReader class can be used to read data from a file. The code below demonstrates how to read all lines from a text file using StreamReader:
 ``` cs
 using (StreamReader reader = new StreamReader("file.txt"))
@@ -535,7 +543,7 @@ using (StreamReader reader = new StreamReader("file.txt"))
 }
 ```
 
-Writing to a File  
+## Writing to a File  
 The StreamWriter class can be used to write data to a file. The code below demonstrates how to write a string to a text file using StreamWriter:
 ``` cs
 using (StreamWriter writer = new StreamWriter("file.txt"))
@@ -667,14 +675,26 @@ Person person = JsonSerializer.Deserialize<Person>(jsonString, options)
 
 Pre-check:
 - The ViewModelBase.cs (located inside the ViewModels folder) should inherit from either observableobject or reactiveui
-- Each viewmodel should inherit from viewmodelbase
+
 
 
 
 Bindings in the view follow:
 - Capital (first letter/word and all words)
 
-The ObservableProperty or variables should start:
+``` xml
+<!-- In axaml view -->
+<TextBlock Text="{Binding ProductName}" />
+```
+
+- Each viewmodel should inherit from viewmodelbase
+```cs
+// In ViewModel
+[ObservableProperty]
+private string _productName;
+```
+
+ObservableProperty or variables should start:
 - Lowercase first letter/word, then uppercase for all words after. 
 
 
@@ -695,7 +715,19 @@ To setup Xunit testing:
 
 
 # Multithreading
-## Async
+By default programs are executed synchronously, if not specified,
+By default (synchronous), when a computer reaches a task that is external it waits unril that task is completed, so that current thread just stops and waits.
+
+The problems this introduces:
+- The current thread becomes "Blocked" from doing any other tasks.
+    - If we have a UI application, the UI thread cannot update while a backend thread is doing a big task.
+
+Only <u>1 problem</u> is solved with async:
+- The issue of the thread becoming blocked is solved. It makes UI applications responsive. How it does this? The task is released to the "Thread pool"
+> A common misconception is that async await will solve the issue of running tasks in parallel. However this is NOT the case. It will not execute any faster, it only solves the 1 problem stated before.
+## Async and Await
+- One convention is to name the aync task with async at the end of the name.
+
 What does asynchronous mean? Performing several tasks at once    
 Synchronous means performing only one task at a time.
 
@@ -722,7 +754,7 @@ private Task TaskAsync()
     return task;
 }
 ```
-## Await
+
 - Methods are set as asynchronous because it might take time to execute. The await inside it ensures the method doesn’t block the UI while it runs. 
     - The `await` keyword provides a nonblocking way to start a task, then continue execution when the task completes.
 
@@ -761,5 +793,12 @@ var result = await Dispatcher.UIThread.InvokeAsync(GetText);
 ## Task Cancellation, 
 
 ## Task.WhenAll() 
+Downsides:
+- Runs in any order, which cant be tracked. The problem with this is that often processes have to executed in a certain order.
+    - No exception handling feedback. It cannot be determined which task threw the exception.
+
+It ok to use for:
+- Runs tasks in parallel. Saves time.
+- Fire and forget tasks
 
 ## Periodic Timer
