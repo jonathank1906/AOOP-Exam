@@ -150,12 +150,13 @@ There are 3 categories of design patterns:
 ## Singleton
 - A class of which only a single instance can exist
 ## Facade
-- 	A single class that represents an entire subsystem
+- The primary objective of the Facade pattern is to provide a simplified interface to a complex subsyste, reducing client-side complexity.
 
 ## Bridge
 
 ## Command
 - Is part of the MVVM toolkit
+- The command pattern encapsulates any operation into an object, supporting operations such as undo/redo. Also, it is primarily used for queing operations.
 ## Observer
 - The Observer Pattern involes an object, known as the subject, maintaining a list of its dependent objects, called observers, and notifiying them automatically of any state changes.
 - It can be implemented both with and without MVVM toolkit.
@@ -164,6 +165,7 @@ There are 3 categories of design patterns:
 - The observer pattern is present behind anything that involves data binding.
 
 ## Strategy
+- The Strategy pattern encapsulates an algorithm for interchangeability. Also, it it used for selecting algorithms at runtime.
 It is recognized by these key features:
 1. Interface Implementation: You define an interface that represents the strategy. Each concrete class implementing this interface represents a different algorithm or strategy.
 2. Context Class: This class maintains a reference to the strategy interface. It uses this reference to execute the strategy, allowing the algorithm to be selected at runtime.
@@ -308,13 +310,15 @@ Callout
 - Strings must be set to empty  
     - Otherwise you will see: `Error reading file: Object reference not set to an instance of an object.`  
 - `int`, `bool`, `double` can be left as is  
-
 </details>
+
+**Step 1: Define the Data Model (Structure)**
+- Creates a C# class that mirrors the JSON structure. 
+- Ensures properties are initialized to avoid null issues.
 
 ``` cs
 public class Person
 {
-    // Initialize lists to avoid null references
     public string FirstName { get; set; } = string.Empty;
     public string LastName { get; set; } = string.Empty;
     public int Age { get; set; }
@@ -322,8 +326,106 @@ public class Person
     public List<string> Hobbies { get; set; } = new List<string>();
 }
 ```
+**Step 2: Locate and Read the JSON File**
+- Checks if the file exists (critical for error handling).
+- Reads the raw JSON text into a string.
+``` cs
+string filePath = "person.json";
+// Verify the file exists
+if (!File.Exists(filePath))
+{
+    Console.WriteLine($"Error: File not found at {Path.GetFullPath(filePath)}");
+    return;
+}
+// Read the file content
+string jsonString = File.ReadAllText(filePath);
+```
+
+**Step 3: Configure Deserialization (Optional but Recommended)**
+- Makes parsing more flexible (e.g., accepts "firstName" or "FirstName").
+- Handles edge cases (like commented JSON).
+```cs
+var options = new JsonSerializerOptions
+{
+    PropertyNameCaseInsensitive = true,  // Ignore property name casing
+    ReadCommentHandling = JsonCommentHandling.Skip  // Allow comments in JSON
+};
+```
+
+**Step 4: Deserialize JSON into Objects**
+- Converts the JSON string into a Person object. 
+
+``` cs
+// The ?? operator throws a clear error if deserialization fails (returns null).
+Person person = JsonSerializer.Deserialize<Person>(jsonString) 
+    ?? throw new Exception("Deserialization failed: returned null");
+
+// If using the options from step 3:
+Person person = JsonSerializer.Deserialize<Person>(jsonString, options) 
+    ?? throw new Exception("Deserialization failed: returned null");
+```
+
+**Step 5: Validate and Use the Data**
 
 
+
+# Collections
+
+``` cs
+using System.Collections.Generic;
+```
+``` cs
+// Observable collections for UI
+```
+
+## Arrays
+``` cs
+// Arrays
+```
+
+``` cs
+// Generics
+/* 
+Generics provide a way to define classes, methods, 
+and interfaces with a placeholder for the data type.
+*/
+class List<T>
+{
+    public T[] items {get; set;}
+}
+```
+
+## Lists
+``` cs
+// Lists
+/*
+- Dynamic arrays
+T is the generic type
+*/
+```
+
+
+
+``` cs
+// Dictionary
+Dictionary<string, int> args = 
+new Dictionary<string, int>
+{
+    {"Alice", 25}, {"Bob", 30}
+};
+
+Console.WriteLine(args["Alice"]);
+// 25
+```
+
+## Queue
+
+
+
+
+## Stack
+
+## Hashset
 
 
 # LINQ
@@ -336,6 +438,20 @@ If there is x amount of students enrolled in a
 a class/ 
 
 They can be applied to Lists, databases.....
+
+## Using LINQ
+LINQ features can be used in a C# program by importing the `System.Linq` namespace.
+```cs
+using System.Linq;
+```
+
+### var
+Since the type of an executed LINQ query’s result is not always known, it is common to store the result in an implicitly typed variable using the keyword var.
+``` cs
+var custQuery = from cust in customers
+                where cust.City == "Phoenix"
+                select new { cust.Name, cust.Phone };
+```
 
 A dataset can be seen below
 - The rows represent single objects inside of the collection
@@ -362,7 +478,7 @@ List<Product> products =
     { Id = 4, Name = "Shoes", Price = 59.99m, Category = "Apparel" }
 ];
 ```
-
+## Method & Query Syntax 
 Two syntaxes for LINQ queries:
 1. Method chaining
 2. Query syntax
@@ -385,10 +501,10 @@ var output = from b in books
                     select property;
 ```
 
-### **Where**  
-"Give me the items from this list WHERE my condition is met"
+## Where  
+> Operates on the rows. A Where operation results in the same # of columns but fewer rows.
+- "Give me the items from this list WHERE my condition is met"
 - Used for SELECTION filtering
-- Looks at the rows
 - Chooses the items.
 
 Since the right side is a boolean value you can add mutliple condition using && 
@@ -422,8 +538,9 @@ foreach (var num in numbersOver5)
 }
 ```
 
-### **Select**
-- Projection:
+## Select
+> Operates on the columns. A Select operation results in the same # of rows but fewer columns.
+- Also called "Projection"
 - Looks at the columns
 - Chooses the fields we want to look at
 
@@ -440,20 +557,36 @@ foreach (var name in productNamesMethod)
 }
 ```
 
-### **OrderBy, OrderByDescending, ThenBy**  (Sorting) 
+### SelectMany
+- Flattens
+
+## OrderBy, OrderByDescending, ThenBy (Sorting) 
 Sort in ascending or descending order
 - The fields must be int, double, float, etc: smallest to largest for example
 - string alphabetical order maybe
 
-OrderBy - Ascending order
-OrderByDescending - Descending order
-ThenBy
+- OrderBy - Ascending order  
+- OrderByDescending - Descending order
+- ThenBy
+
+``` cs
+var sortedProductsMethod = products.OrderBy(p => p.Price).ToList();
+
+var sortedProductsQuery = from p in products
+                          orderby p.Price
+                          select p;
+
+foreach (var product in sortedProductsMethod)
+{
+    Console.WriteLine($"{product.Name} - {product.Price}");
+}
+```
 
 ``` cs
 //.ToList() // Execute it now.
 ```
 
-### **Sum, Average, Min, Max, Count** (Aggregation)
+## Sum, Average, Min, Max, Count (Aggregation)
 
 ``` cs
 decimal totalPrice = products.Sum(p => p.Price);
@@ -469,7 +602,7 @@ Console.WriteLine($"Min Price: {minPrice}");
 Console.WriteLine($"Product Count: {productCount}");
 ```
 
-### **GroupBy**  
+## GroupBy 
 - Grouping splits data into groups based on a common key.
 If we wanted the average price of electronics and apparel. Notice the products are sorted into these 2 categories.
 Steps:
@@ -494,67 +627,28 @@ foreach (var group in groupedByCategoryMethod)
 }
 ```
 
-### **Combining Operations**
+## Combining Operations
 
 2. Get the average price of each group
-
-
-# Collections
-
 ``` cs
-using System.Collections.Generic;
-
-
-// Observable collections for UI
-
-// Arrays
-
-
-// -----------------------------
-
-
-// Generics
-/* 
-Generics provide a way to define classes, methods, 
-and interfaces with a placeholder for the data type.
-*/
-class List<T>
+// Method chaining syntax: Filter, Select, and Sort
+var sortedCheapProductsMethod = products.Where(p => p.Price > 500)
+                                        .Select(p => new {p.Name, p.Price})
+                                        .OrderBy(p => p.Price)
+                                        .Select(p => p.Name)
+                                        .ToList();
+// Query syntax: Filter, Select, and Sort
+var sortedCheapProductsQuery = from p in products
+                               where p.Price > 500
+                               select (p.Name, p.Price) into np
+                               orderby np.Price
+                               select np.Name;
+foreach (var name in sortedCheapProductsMethod)
 {
-    public T[] items {get; set;}
+    Console.WriteLine(name);
 }
-
-
-
-
-// Lists
-/*
-- Dynamic arrays
-T is the generic type
-*/
-
-
-
-
-
-// Dictionary
-Dictionary<string, int> args = 
-new Dictionary<string, int>
-{
-    {"Alice", 25}, {"Bob", 30}
-};
-
-Console.WriteLine(args["Alice"]);
-// 25
-
-// Queue
-
-
-
-
-// Stack
-
-// Hashset
 ```
+
 
 # Data-Binding
 
@@ -572,9 +666,14 @@ The ObservableProperty or variables should start:
 
 
 # Unit Testing and Avalonia Headless Testing
+## Xunit
 To setup Xunit testing:
 - Have 2 folders
 - 1 folder with the name of the other folder + .Tests
+
+## Avalonia Headless Testing
+[Avalonia Headless Testing](https://github.com/AvaloniaUI/Avalonia.Samples/tree/main/src/Avalonia.Samples/Testing/TestableApp.Headless.XUnit)
+
 
 # Multithreading
 ## Async
