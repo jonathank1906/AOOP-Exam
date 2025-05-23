@@ -229,145 +229,14 @@ public class Program
 }
 ```
 
-## Dependency Injection
+# Dependency Injection
 - You don’t instantiate stuff inside of a class, but outside of a class and then you give it to the class. Meaning, you inject the dependency of the class from outside.
 
-# File Handling (Read and Write)
-Reading from a File  
-The StreamReader class can be used to read data from a file. The code below demonstrates how to read all lines from a text file using StreamReader:
-``` cs
-using (StreamReader reader = new StreamReader("file.txt"))
-{
-    string line;
-    while ((line = reader.ReadLine()) != null)
-    {
-        Console.WriteLine(line);
-    }
-}
-```
+# Classes, Constructors & Object Initializers
 
-Writing to a File  
-The StreamWriter class can be used to write data to a file. The code below demonstrates how to write a string to a text file using StreamWriter:
-``` cs
-using (StreamWriter writer = new StreamWriter("file.txt"))
-{
-    writer.WriteLine("Hello, world!");
-}
-```
+# Properties
 
-# Parsing JSON and CSV
-## CSV
-
-/* !!!!!!!! Preliminary Step: Install CSV helper with the NuGet command!!!!!! 
-- In either case of a console application or Avalonia app,
-you will need to check if CSVhelper exists in the .csproj file. 
-*/
-
-``` cs
-// Step 1: Prepare the data
-using CSVHelper;
-using CsvHelper.Configuration.Attributes;
-
-public class Comic
-{
-    [Name("Title")]
-    public string Title { get; set; } = string.Empty;
-    
-    [Name("Author")]
-    public string Author { get; set; } = string.Empty;
-    
-    [Name("ReleaseYear")]
-    public int Year { get; set; }
-}
-```
-
-``` cs
-// Step 2: Read data using CsvReader
-/*
-Inputs:
-- String filepath
-
-Outputs:
-- Data
-
-*/
-
-
-
-// Step 3 (optional): Write data using CsvWriter
-```
-
-## JSON
-
-<details>
-<summary>Handling Null During Deserialization</summary>
-
-IF I DO CHECK FOR NULL DURING DESERIALIZATION  
-- It is not necessary to set to empty.
-
-IF I DON'T CHECK FOR NULL DURING DESERIALIZATION  
-Callout  
-- Strings must be set to empty  
-    - Otherwise you will see: `Error reading file: Object reference not set to an instance of an object.`  
-- `int`, `bool`, `double` can be left as is  
-</details>
-
-**Step 1: Define the Data Model (Structure)**
-- Creates a C# class that mirrors the JSON structure. 
-- Ensures properties are initialized to avoid null issues.
-
-``` cs
-public class Person
-{
-    public string FirstName { get; set; } = string.Empty;
-    public string LastName { get; set; } = string.Empty;
-    public int Age { get; set; }
-    public bool IsEmployed { get; set; }
-    public List<string> Hobbies { get; set; } = new List<string>();
-}
-```
-**Step 2: Locate and Read the JSON File**
-- Checks if the file exists (critical for error handling).
-- Reads the raw JSON text into a string.
-``` cs
-string filePath = "person.json";
-// Verify the file exists
-if (!File.Exists(filePath))
-{
-    Console.WriteLine($"Error: File not found at {Path.GetFullPath(filePath)}");
-    return;
-}
-// Read the file content
-string jsonString = File.ReadAllText(filePath);
-```
-
-**Step 3: Configure Deserialization (Optional but Recommended)**
-- Makes parsing more flexible (e.g., accepts "firstName" or "FirstName").
-- Handles edge cases (like commented JSON).
-```cs
-var options = new JsonSerializerOptions
-{
-    PropertyNameCaseInsensitive = true,  // Ignore property name casing
-    ReadCommentHandling = JsonCommentHandling.Skip  // Allow comments in JSON
-};
-```
-
-**Step 4: Deserialize JSON into Objects**
-- Converts the JSON string into a Person object. 
-
-``` cs
-// The ?? operator throws a clear error if deserialization fails (returns null).
-Person person = JsonSerializer.Deserialize<Person>(jsonString) 
-    ?? throw new Exception("Deserialization failed: returned null");
-
-// If using the options from step 3:
-Person person = JsonSerializer.Deserialize<Person>(jsonString, options) 
-    ?? throw new Exception("Deserialization failed: returned null");
-```
-
-**Step 5: Validate and Use the Data**
-
-
+# Interfaces
 
 # Collections
 
@@ -649,6 +518,150 @@ foreach (var name in sortedCheapProductsMethod)
 }
 ```
 
+# Object, ToString, IComparable
+
+
+# File Handling (Read and Write)
+Reading from a File  
+The StreamReader class can be used to read data from a file. The code below demonstrates how to read all lines from a text file using StreamReader:
+``` cs
+using (StreamReader reader = new StreamReader("file.txt"))
+{
+    string line;
+    while ((line = reader.ReadLine()) != null)
+    {
+        Console.WriteLine(line);
+    }
+}
+```
+
+Writing to a File  
+The StreamWriter class can be used to write data to a file. The code below demonstrates how to write a string to a text file using StreamWriter:
+``` cs
+using (StreamWriter writer = new StreamWriter("file.txt"))
+{
+    writer.WriteLine("Hello, world!");
+}
+```
+
+# Parsing JSON and CSV
+## CSV
+
+/* !!!!!!!! Preliminary Step: Install CSV helper with the NuGet command!!!!!! 
+- In either case of a console application or Avalonia app,
+you will need to check if CSVhelper exists in the .csproj file. 
+*/
+
+``` cs
+// Step 1: Prepare the data
+using CSVHelper;
+using CsvHelper.Configuration.Attributes;
+
+public class Comic
+{
+    [Name("Title")]
+    public string Title { get; set; } = string.Empty;
+    
+    [Name("Author")]
+    public string Author { get; set; } = string.Empty;
+    
+    [Name("ReleaseYear")]
+    public int Year { get; set; }
+}
+```
+
+``` cs
+// Step 2: Read data using CsvReader
+/*
+Inputs:
+- String filepath
+
+Outputs:
+- Data
+
+*/
+
+
+
+// Step 3 (optional): Write data using CsvWriter
+```
+
+## JSON
+
+<details>
+<summary>Handling Null During Deserialization</summary>
+
+IF I DO CHECK FOR NULL DURING DESERIALIZATION  
+- It is not necessary to set to empty.
+
+IF I DON'T CHECK FOR NULL DURING DESERIALIZATION  
+Callout  
+- Strings must be set to empty  
+    - Otherwise you will see: `Error reading file: Object reference not set to an instance of an object.`  
+- `int`, `bool`, `double` can be left as is  
+</details>
+
+**Step 1: Define the Data Model (Structure)**
+- Creates a C# class that mirrors the JSON structure. 
+- Ensures properties are initialized to avoid null issues.
+
+``` cs
+public class Person
+{
+    public string FirstName { get; set; } = string.Empty;
+    public string LastName { get; set; } = string.Empty;
+    public int Age { get; set; }
+    public bool IsEmployed { get; set; }
+    public List<string> Hobbies { get; set; } = new List<string>();
+}
+```
+**Step 2: Locate and Read the JSON File**
+- Checks if the file exists (critical for error handling).
+- Reads the raw JSON text into a string.
+``` cs
+string filePath = "person.json";
+// Verify the file exists
+if (!File.Exists(filePath))
+{
+    Console.WriteLine($"Error: File not found at {Path.GetFullPath(filePath)}");
+    return;
+}
+// Read the file content
+string jsonString = File.ReadAllText(filePath);
+```
+
+**Step 3: Configure Deserialization (Optional but Recommended)**
+- Makes parsing more flexible (e.g., accepts "firstName" or "FirstName").
+- Handles edge cases (like commented JSON).
+```cs
+var options = new JsonSerializerOptions
+{
+    PropertyNameCaseInsensitive = true,  // Ignore property name casing
+    ReadCommentHandling = JsonCommentHandling.Skip  // Allow comments in JSON
+};
+```
+
+**Step 4: Deserialize JSON into Objects**
+- Converts the JSON string into a Person object. 
+
+``` cs
+// The ?? operator throws a clear error if deserialization fails (returns null).
+Person person = JsonSerializer.Deserialize<Person>(jsonString) 
+    ?? throw new Exception("Deserialization failed: returned null");
+
+// If using the options from step 3:
+Person person = JsonSerializer.Deserialize<Person>(jsonString, options) 
+    ?? throw new Exception("Deserialization failed: returned null");
+```
+
+**Step 5: Validate and Use the Data**
+
+
+
+# MVC and MVVM
+
+# MVVM Toolkit
+
 
 # Data-Binding
 
@@ -665,6 +678,10 @@ The ObservableProperty or variables should start:
 - Lowercase first letter/word, then uppercase for all words after. 
 
 
+# Layout
+
+# Styling and Animations
+
 # Unit Testing and Avalonia Headless Testing
 ## Xunit
 To setup Xunit testing:
@@ -673,6 +690,8 @@ To setup Xunit testing:
 
 ## Avalonia Headless Testing
 [Avalonia Headless Testing](https://github.com/AvaloniaUI/Avalonia.Samples/tree/main/src/Avalonia.Samples/Testing/TestableApp.Headless.XUnit)
+
+# Search and Sorting
 
 
 # Multithreading
@@ -703,17 +722,17 @@ private Task TaskAsync()
     return task;
 }
 ```
-### Await
+## Await
 - Methods are set as asynchronous because it might take time to execute. The await inside it ensures the method doesn’t block the UI while it runs. 
     - The `await` keyword provides a nonblocking way to start a task, then continue execution when the task completes.
 
-### Task
+## Task
 Simple task
 Call `Task.Run()`
 
 `task.Wait();`
 
-### Avalonia UI thread (updating the UI)
+## Avalonia UI thread (updating the UI)
 - Dont update the UI from a different thread. Everytime you asynchronously do something in a seperate thread and you want to change something in the UI, you should explicitly go back to the UI thread. In other words, you should not change something about the UI from outside of the UI Thread.
 
 ``` cs
@@ -734,3 +753,13 @@ Dispatcher.UIThread.Post(() => SetText(text));
 // Start the job on the ui thread and wait for the result.
 var result = await Dispatcher.UIThread.InvokeAsync(GetText);
 ```
+
+## Locking
+
+## Concurrent Collections
+
+## Task Cancellation, 
+
+## Task.WhenAll() 
+
+## Periodic Timer
