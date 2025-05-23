@@ -715,6 +715,22 @@ To setup Xunit testing:
 
 
 # Multithreading
+[video](https://www.youtube.com/watch?v=88e9uMlLCf8&t=1174s)
+
+## Task
+- `Task` is a class that is built upon threads (note: threads should never be used).
+
+A task can be run using a function call or a lambda expression. In the case of the lambda expresion we just put whatever needs to be run inside there.
+
+Simple task
+Call `Task.Run()`
+
+`task.Wait();`
+
+### Task Exceptions
+
+
+## Async and Await
 By default programs are executed synchronously, if not specified,
 By default (synchronous), when a computer reaches a task that is external it waits unril that task is completed, so that current thread just stops and waits.
 
@@ -722,10 +738,14 @@ The problems this introduces:
 - The current thread becomes "Blocked" from doing any other tasks.
     - If we have a UI application, the UI thread cannot update while a backend thread is doing a big task.
 
-Only <u>1 problem</u> is solved with async:
-- The issue of the thread becoming blocked is solved. It makes UI applications responsive. How it does this? The task is released to the "Thread pool"
+Only 1 problem is solved with async:
+- The issue of the thread becoming blocked is solved. It makes UI applications responsive.
+
+The concept of async and await:
+How it does this? When the application arrives at a point whre you await something (marked with the await keyword), that thread is not blocked anymroe because it is released back to the "Thread pool". Only when the result from the external resource is available then we get kind of like a new thread that would resume execution from that point. In the meantime, in those seconds where actually the thread would not do anything is instead of sitting there and waiting it is released and can be actually used to perform some other work in the meantime.
+
 > A common misconception is that async await will solve the issue of running tasks in parallel. However this is NOT the case. It will not execute any faster, it only solves the 1 problem stated before.
-## Async and Await
+
 - One convention is to name the aync task with async at the end of the name.
 
 What does asynchronous mean? Performing several tasks at once    
@@ -758,11 +778,7 @@ private Task TaskAsync()
 - Methods are set as asynchronous because it might take time to execute. The await inside it ensures the method doesn’t block the UI while it runs. 
     - The `await` keyword provides a nonblocking way to start a task, then continue execution when the task completes.
 
-## Task
-Simple task
-Call `Task.Run()`
 
-`task.Wait();`
 
 ## Avalonia UI thread (updating the UI)
 - Dont update the UI from a different thread. Everytime you asynchronously do something in a seperate thread and you want to change something in the UI, you should explicitly go back to the UI thread. In other words, you should not change something about the UI from outside of the UI Thread.
@@ -787,8 +803,26 @@ var result = await Dispatcher.UIThread.InvokeAsync(GetText);
 ```
 
 ## Locking
+**Thread Safety**
+- Code that can have race conditions is usually called "not thread-safe". Goal is to avoid potential race conditions. 
+
+Locking is directly related to thread safety. Locking ensures that only one thread can ever enter this part of the code at the same time. So, multiple threads are coming, but as soon as one thread goes in there, no other threads are allowed.
+
+### Dead Lock
+- An issue can arrise with locking, which is called dead locks. How this happens is basically when you lock something with one thread and then lock another thing with the other thread and then lock the threads each other lock eachother and now they can never unlock.
+- The easiest way to avoid it is by always locking in the same order (locks are inside of each other).
+
+
 
 ## Concurrent Collections
+Include:
+```cs
+using System.Collections.Concurrent;
+```
+
+### Locking Collections
+- Standard (generic) collections are not thread-safe for writing or enumeration. What this means is if you change a list for example, and you have another thread going through each item in the list (enumeration - for loop) and you change it in a different thread your program will either do something weird or will throw an exception.
+    - This is done on purpose as making a collection thread safe by locking is not for free. The disadvance is that is makes it a little slower to compute. 
 
 ## Task Cancellation, 
 
@@ -798,7 +832,6 @@ Downsides:
     - No exception handling feedback. It cannot be determined which task threw the exception.
 
 It ok to use for:
-- Runs tasks in parallel. Saves time.
-- Fire and forget tasks
+- Fire and forget tasks, where the tasks can be executed in any order. It runs tasks in parallel. Saves time.
 
 ## Periodic Timer
