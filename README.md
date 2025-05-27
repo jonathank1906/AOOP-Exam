@@ -44,6 +44,7 @@ Implemented using:
 - Access modifiers
 
 ## Inheritance
+- C# supports single inheritance only, meaning a class can only inherit from a single class.
 
 ## Polymorphism
 - Overriding can be used on properties also!
@@ -437,6 +438,10 @@ foreach (var name in productNamesMethod)
 ### SelectMany
 - Flattens
 
+```cs
+ var allSkills = employees.SelectMany(e => e.Skills);
+```
+
 ## OrderBy, OrderByDescending, ThenBy (Sorting) 
 Sort in ascending or descending order
 - The fields must be int, double, float, etc: smallest to largest for example
@@ -526,7 +531,43 @@ foreach (var name in sortedCheapProductsMethod)
 }
 ```
 
+Other LINQ queries:  
+Contains:
+```cs
+var query = names.Where(x => x.Contains("a"));
+```
+
 # Object, ToString, IComparable
+## The Object Type
+- Every class in C# automatically inherits from the object class, even through you dont specifiy that it inherits from `Object`.
+
+## ToString()
+- Useful for when printing an object to the console. It will convert the object to a string. Otherwise you will see the type.
+    - Also useful for testing purposes to be able to check the fields that it is set to.
+- Always remember to override the `ToString()` method.
+
+```cs
+// Without ToString()
+public class Panda
+{
+    public string Name;
+}
+
+Panda p = new Panda { Name = "Petey" };
+Console.WriteLine (p); // Panda
+
+// With ToString()
+public class Panda
+{
+    public string Name;
+    public override string ToString() => Name;
+}
+
+Panda p = new Panda { Name = "Petey" };
+Console.WriteLine (p); // Petey
+```
+
+## IComparable
 
 
 # File Handling (Read and Write)
@@ -822,11 +863,34 @@ using System.Collections.Concurrent;
 
 ### Locking Collections
 - Standard (generic) collections are not thread-safe for writing or enumeration. What this means is if you change a list for example, and you have another thread going through each item in the list (enumeration - for loop) and you change it in a different thread your program will either do something weird or will throw an exception.
-    - This is done on purpose as making a collection thread safe by locking is not for free. The disadvance is that is makes it a little slower to compute. 
+    - This is done on purpose (why the collections are not thread-safe by default) as making a collection thread safe by locking is not for free. The disadvantage is that is makes it a little slower to compute. 
 
-## Task Cancellation, 
+Concurrent collections:  
+`ConcurrentBag<T>` 
+- Unordered, like throwing something in a bag. Side note when an item gets added to a regular list, it gets added to the next index.
 
-## Task.WhenAll() 
+`ConcurrentQueue<T>`  
+- If the order is important
+
+`ConcurrentStack<T>`  
+- If the order is important
+
+`ConcurrentDictionary<TKey, TValue>`  
+- Keys and values are used to 
+
+
+# Concurrency
+Here we actually want to run multiple things in parallel.
+
+## Task Cancellation 
+- Previously we have canceled a task by setting a boolean variable (isrunning) to false, however this is not the proper way to do it.
+- To cancel a task from outside of a task: The proper way to do it, the thread safe way, is to use cancellation token source.
+    - Note: if you are just canceling a task from inside the task itself then you can do something simpler like break.
+
+## Concurrent Tasks - Task.WhenAll() 
+- We can manage concurrent asycnhronous operations by using `Task.WhenAll()`
+- It allows you to execute multiple tasks at the same time and it waits for all of them to be finished.
+
 Downsides:
 - Runs in any order, which cant be tracked. The problem with this is that often processes have to executed in a certain order.
     - No exception handling feedback. It cannot be determined which task threw the exception.
@@ -835,3 +899,8 @@ It ok to use for:
 - Fire and forget tasks, where the tasks can be executed in any order. It runs tasks in parallel. Saves time.
 
 ## Periodic Timer
+- Used for when you want a task to occur for example every 5 seconds or every 5 hours. This could be a task that keeps downloading something or keeps updating something from a database.
+    - The essential idea is that this task does not run the whole time but only does something every certain amount of time.
+- Another use case is for it to be used to run work in the background and do updates all the time.
+
+It is better to use a periodic timer instead of the traditoinal way where you would use a while true loop that waits for five milliseconds for example.
