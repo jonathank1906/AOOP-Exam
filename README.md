@@ -1,4 +1,4 @@
-# Table of contents
+# Table of Contents
 - [Object-Oriented Analysis](#object-oriented-analysis)
   - [OO Principles](#oo-principles)
   - [SOLID Principles](#solid-principles)
@@ -44,7 +44,7 @@ Implemented using:
 - Access modifiers
 
 ## Inheritance
-- C# supports single inheritance only, meaning a class can only inherit from a single class.
+> C# supports single inheritance only, meaning a class can only inherit from a single class.
 
 ## Polymorphism
 - Overriding can be used on properties also!
@@ -58,9 +58,6 @@ Implemented using:
 - Types
 
 
-# Interfaces
-
-**Interfaces** define contracts for behavior, but without implementing that behavior.
 
 # SOLID Principles
 [link1](https://bool.dev/blog/detail/solid-principles)
@@ -107,7 +104,7 @@ The problem (violation):
 - A class is forced to implment the methods defined in an interface. The problem arises when this class has to implement the methods it doesnt need/or that are invalid/irrelevant.
 
 The solution:
-- Implmenet seperate interfaces (nothing wrong with this)
+- Implement seperate interfaces (nothing wrong with this)
     - Split the larger interface into seperate more specific interfaces.
 - A class can even implement several interfaces...
 
@@ -235,9 +232,19 @@ public class Program
 
 # Classes, Constructors & Object Initializers
 
+## Abstract Classes
+- Abstract classes cannot be instantiated.
+
 # Properties
 
 # Interfaces
+- Interfaces define contracts for behavior, but without implementing that behavior.
+
+- An interface is a "can-do" relationship.
+- Interfaces cannot be instantiated, but can be referenced.
+
+> A class can implement multiple interfaces.
+
 
 # Collections
 
@@ -568,7 +575,8 @@ Console.WriteLine (p); // Petey
 ```
 
 ## IComparable
-
+- `IComparable` is an interface which can be used for sorting.
+- You are forced to implment the `CompareTo()` method.
 
 # File Handling (Read and Write)
 ## Reading from a File  
