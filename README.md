@@ -576,7 +576,7 @@ Console.WriteLine (p); // Petey
 
 ## IComparable
 - `IComparable` is an interface which can be used for sorting.
-- You are forced to implment the `CompareTo()` method.
+- You are forced to implement the `CompareTo()` method.
 
 # File Handling (Read and Write)
 ## Reading from a File  
@@ -713,12 +713,65 @@ Person person = JsonSerializer.Deserialize<Person>(jsonString, options)
 
 **Step 5: Validate and Use the Data**
 
+# UI
+
+Setting up a new Avalonia MVVM project:
+1. Create a new empty folder
+2. Open this folder in VS Code
+3. In the terminal, create a new Avalonia MVVM project: `dotnet new avalonia.mvvm`
+
+## Other
+Connecting view to viewmodel.  
+Top of the view (`Window` or `UserControl`):
+``` xml
+xmlns:vm="using:Layout.ViewModels"
+x:Class="Layout.Views.MainWindow"
+x:DataType="vm:MainWindowViewModel"
+```
+
+Rules to follow:
+- Any `Window` or `UserControl` can only have a single child element as its Content.  
+
+This can be solved by: If you want to display multiple UI elements, you must place them inside a parent container that supports multiple children, such as:
+- StackPanel
+- Grid
+- DockPanel
+- WrapPanel
+- Canvas
+
+## UI Elements
+
+### Shapes
+
+
+### Grid
+- Create row or column definitions:
+    - Specify specific size
+    - "*" means it will be locked in place (wont move)
+    - "Auto" means
+- Surround entire code with grid
+- Add additional <Grid> </Grid> for each row or columns's individual content
+``` xml
+<Grid>
+    <Grid.RowDefinitions>
+        <RowDefinition Height="45" />
+        <RowDefinition Height="*" />
+        <RowDefinition Height="Auto" />
+    </Grid.RowDefinitions>
+</Grid>
+```
 
 
 # MVC and MVVM
 
 # MVVM Toolkit
+`[RelayCommand]`
+- Requires `using CommunityToolkit.Mvvm.Input;` at the top of the viewmodel
 
+
+`[ObservableProperty]`
+- Requires `using CommunityToolkit.Mvvm.ComponentModel;` at the top of the viewmodel
+- Observable properties can be updated at any time while the application is running. When you change their value in the ViewModel, the UI will automatically update to reflect the new value.
 
 # Data-Binding
 
@@ -779,9 +832,13 @@ Call `Task.Run()`
 ### Task Exceptions
 
 
-## Async and Await
+## async and await
+
+### async Keyword
+
+### await Keyword
 By default programs are executed synchronously, if not specified,
-By default (synchronous), when a computer reaches a task that is external it waits unril that task is completed, so that current thread just stops and waits.
+By default (synchronous), when a computer reaches a task that is external it waits until that task is completed, so that current thread just stops and waits.
 
 The problems this introduces:
 - The current thread becomes "Blocked" from doing any other tasks.
@@ -904,7 +961,7 @@ Downsides:
     - No exception handling feedback. It cannot be determined which task threw the exception.
 
 It ok to use for:
-- Fire and forget tasks, where the tasks can be executed in any order. It runs tasks in parallel. Saves time.
+- Fire-and-forget tasks, where the tasks can be executed in any order. It runs tasks in parallel. Saves time.
 
 ## Periodic Timer
 - Used for when you want a task to occur for example every 5 seconds or every 5 hours. This could be a task that keeps downloading something or keeps updating something from a database.
