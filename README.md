@@ -3,7 +3,6 @@
   - [OO Principles](#oo-principles)
   - [SOLID Principles](#solid-principles)
   - [Design Patterns](#design-patterns)
-  - [Dependency Injection](#dependency-injection)
 - [Programming](#programming)
   - [Classes, Constructors & Object Initializers](#classes-constructors--object-initializers)
   - [Properties](#properties)
@@ -136,7 +135,6 @@ There are 3 categories of design patterns:
 	- Singleton
 2. Structural
 	- Facade
-	- Bridge
 3. Behavioral
 	- Command
 	- Observer
@@ -149,8 +147,6 @@ There are 3 categories of design patterns:
 - A class of which only a single instance can exist
 ## Facade
 - The primary objective of the Facade pattern is to provide a simplified interface to a complex subsyste, reducing client-side complexity.
-
-## Bridge
 
 ## Command
 - Is part of the MVVM toolkit
@@ -227,7 +223,7 @@ public class Program
 }
 ```
 
-# Dependency Injection
+## Dependency Injection
 - You don’t instantiate stuff inside of a class, but outside of a class and then you give it to the class. Meaning, you inject the dependency of the class from outside.
 
 # Classes, Constructors & Object Initializers
@@ -282,17 +278,27 @@ T is the generic type
 ```
 
 
+## Dictionary
+- A dictionary is generic, meaning the key and value can be of any data type (value type or reference type).
 
 ``` cs
-// Dictionary
+
+// Creating an empty dictionary
+var types = new Dictionary<string,string>();
+
+// Prepopulating a dictionary with predefined key-value pairs (syntax style 1)
 Dictionary<string, int> args = 
-new Dictionary<string, int>
+new Dictionary<string, int> // <key, value>
 {
-    {"Alice", 25}, {"Bob", 30}
+    {"Alice", 25}, 
+    {"Bob", 30}
 };
 
 Console.WriteLine(args["Alice"]);
 // 25
+
+// Index notation predef (syntax style 2)
+
 ```
 
 ## Queue
@@ -857,10 +863,12 @@ To setup Xunit testing:
 - Requires the set to be sorted before it can be searched.
 - 
 ## Sorting Algorithms
+[Link](https://www.bigocheatsheet.com)
 ### Selection sort
 ### Bubble sort
 ### Merge sort
 ### Quick sort
+
 # Multithreading
 [video](https://www.youtube.com/watch?v=88e9uMlLCf8&t=1174s)
 
