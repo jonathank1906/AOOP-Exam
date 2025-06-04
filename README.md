@@ -21,7 +21,7 @@
   - [Layout](#layout)
   - [Styling and Animations](#styling-and-animations)
 - [Unit Testing and Avalonia Headless Testing](#unit-testing-and-avalonia-headless-testing)
-- [Search and Sorting in C#](#search-and-sorting-in-c)
+- [Search and Sorting in C#](#search-and-sorting)
 - [Multithreading](#multithreading)
   - [Tasks and Async / Await](#tasks-and-async--await)
   - [Avalonia UI Thread](#avalonia-ui-thread)
@@ -303,7 +303,7 @@ Console.WriteLine(args["Alice"]);
 ## Stack
 
 ## Hashset
-
+- The hashset collection is rather specialized. It is not one that we use on a regular basis, however it provides a lot of useful functionality when need to work with multiple collections and you need to identify duplicate values. Its also useful when you need to remove all duplicate values from a collection or multiple collections.
 
 # LINQ
 What is a Query?
@@ -516,7 +516,7 @@ foreach (var group in groupedByCategoryMethod)
 }
 ```
 
-## Combining Operations
+## Combining Operations (Selection + Projection??)
 
 2. Get the average price of each group
 ``` cs
@@ -538,8 +538,9 @@ foreach (var name in sortedCheapProductsMethod)
 }
 ```
 
-Other LINQ queries:  
-Contains:
+## Other LINQ queries:  
+### Join
+### Contains:
 ```cs
 var query = names.Where(x => x.Contains("a"));
 ```
@@ -604,47 +605,58 @@ using (StreamWriter writer = new StreamWriter("file.txt"))
 # Parsing JSON and CSV
 ## CSV
 
-/* !!!!!!!! Preliminary Step: Install CSV helper with the NuGet command!!!!!! 
+- Preliminary Step: Install CSV helper with the NuGet command or manually enter it into the .csproj file.
 - In either case of a console application or Avalonia app,
-you will need to check if CSVhelper exists in the .csproj file. 
-*/
+you will need to check if CsvHelper exists in the .csproj file. 
+```
+<ItemGroup>
+ <PackageReference Include="CsvHelper" Version="33.0.1" />
+</ItemGroup>
+```
 
+**Step 1: Prepare the data**
+- Create a class to represent
+- `CsvHelper.Configuration.Attributes` contains the [Name] attribute.
+- The `[Name("ColumnName")]` attribute directly maps a property in your class to a column in the CSV file.
+- If the CSV column name matches the property name exactly, you can even omit `[Name]` (case-insensitive by default).
+- Map the properties to the attributes of the CSV file using `[Name("ColumnName")]`
 ``` cs
-// Step 1: Prepare the data
-using CSVHelper;
 using CsvHelper.Configuration.Attributes;
 
 public class Comic
 {
-    [Name("Title")]
-    public string Title { get; set; } = string.Empty;
-    
-    [Name("Author")]
-    public string Author { get; set; } = string.Empty;
-    
-    [Name("ReleaseYear")]
-    public int Year { get; set; }
+    [Name("Title")]  // Maps to the "Title" column in the CSV
+    public string Name { get; set; }  // Property name differs from CSV column
+
+    [Name("ReleaseYear")]  
+    public int Year { get; set; }  // Maps "ReleaseYear" in CSV to "Year" property
+
+    public int PageCount {get ; set; } // Exactly matches in the CSV file
 }
 ```
-
+**Step 2: Read data using CsvReader**  
+Use `Streamreader`
 ``` cs
-// Step 2: Read data using CsvReader
-/*
-Inputs:
-- String filepath
+using CsvHelper;
+using System.Globalization;
 
-Outputs:
-- Data
+public class DataLoader
+{
+    public List<T> LoadCsv<T>(string filePath)
+    {
+        using var reader = new StreamReader(filePath);
+        using var csv = new CsvReader(reader, CultureInfo.InvariantCulture);
+        return csv.GetRecords<T>().ToList();
+    }
+}
 
-*/
-
-
-
-// Step 3 (optional): Write data using CsvWriter
+// Trigger - 2 options
+var employees = dataLoader.LoadCsv<Employee>("employees.csv");
+List<Employee> employees = dataLoader.LoadCsv<Employee>("employees.csv");
 ```
-
+**Step 3 (optional): Write data using CsvWriter**
 ## JSON
-
+- Include `using System.Text.Json;`
 <details>
 <summary>Handling Null During Deserialization</summary>
 
@@ -729,28 +741,89 @@ x:Class="Layout.Views.MainWindow"
 x:DataType="vm:MainWindowViewModel"
 ```
 
+
+
+## UI Elements
+[Avalonia Docs - Controls](https://docs.avaloniaui.net/docs/reference/controls/)
+
+
+
+
+# MVC and MVVM
+
+# MVVM Toolkit
+## `[RelayCommand]`
+- Requires `using CommunityToolkit.Mvvm.Input;` at the top of the viewmodel
+
+Examples:
+| Method Name (ViewModel) | Generated Property Name (View) |
+|----|-----------|
+| Start  | StartCommand |
+| Stop  | StopCommand |
+
+## `[ObservableProperty]`
+- Requires `using CommunityToolkit.Mvvm.ComponentModel;` at the top of the viewmodel
+- Observable properties can be updated at any time while the application is running. When you change their value in the ViewModel, the UI will automatically update to reflect the new value.
+    - It automatically implements `INotifyPropertyChanged`.
+- For static/constant values, a regular property is fine.
+
+# Data-Binding
+- Data binding is typically done between the View and ViewModel. However, it is also sometimes necessary to do bindig between the View and the code behind.
+Pre-check:
+- The ViewModelBase.cs (located inside the ViewModels folder) should inherit from either observableobject or reactiveui
+- Each viewmodel should inherit from viewmodelbase
+
+
+> **Bindings are case-sensitive!**  
+
+Bindings in the view follow:
+- Capital (first letter/word and all words)
+
+``` xml
+<!-- In axaml view -->
+<TextBlock Text="{Binding ProductName}" />
+```
+## Code Behind Binding
+- x:Name or Name
+
+- Buttons: Click=""
+
+```cs
+// In ViewModel
+[ObservableProperty]
+private string _productName;
+```
+
+ObservableProperty or variables should start:
+- Lowercase first letter/word, then uppercase for all words after. 
+
+Examples:
+| Field Name (ViewModel) | Generated Property Name (View) |
+|----|-----------|
+| _productName  | ProductName |
+| productName  | ProductName |
+
+
+# Layout
 Rules to follow:
 - Any `Window` or `UserControl` can only have a single child element as its Content.  
 
-This can be solved by: If you want to display multiple UI elements, you must place them inside a parent container that supports multiple children, such as:
+This can be solved by: If you want to display multiple UI elements, you must place them inside a parent container that supports multiple children, such as: - Surround entire code with any of the following:
 - StackPanel
 - Grid
 - DockPanel
 - WrapPanel
 - Canvas
 
-## UI Elements
+## Grid
 
-### Shapes
+- Add additional <Grid> </Grid> for each row or columns's individual content
 
-
-### Grid
-- Create row or column definitions:
+- Defining rows and columns
     - Specify specific size
     - "*" means it will be locked in place (wont move)
     - "Auto" means
-- Surround entire code with grid
-- Add additional <Grid> </Grid> for each row or columns's individual content
+
 ``` xml
 <Grid>
     <Grid.RowDefinitions>
@@ -761,46 +834,7 @@ This can be solved by: If you want to display multiple UI elements, you must pla
 </Grid>
 ```
 
-
-# MVC and MVVM
-
-# MVVM Toolkit
-`[RelayCommand]`
-- Requires `using CommunityToolkit.Mvvm.Input;` at the top of the viewmodel
-
-
-`[ObservableProperty]`
-- Requires `using CommunityToolkit.Mvvm.ComponentModel;` at the top of the viewmodel
-- Observable properties can be updated at any time while the application is running. When you change their value in the ViewModel, the UI will automatically update to reflect the new value.
-
-# Data-Binding
-
-Pre-check:
-- The ViewModelBase.cs (located inside the ViewModels folder) should inherit from either observableobject or reactiveui
-
-
-
-
-Bindings in the view follow:
-- Capital (first letter/word and all words)
-
-``` xml
-<!-- In axaml view -->
-<TextBlock Text="{Binding ProductName}" />
-```
-
-- Each viewmodel should inherit from viewmodelbase
-```cs
-// In ViewModel
-[ObservableProperty]
-private string _productName;
-```
-
-ObservableProperty or variables should start:
-- Lowercase first letter/word, then uppercase for all words after. 
-
-
-# Layout
+- Grids can be nested to achieve more complex layouts
 
 # Styling and Animations
 
@@ -814,8 +848,19 @@ To setup Xunit testing:
 [Avalonia Headless Testing](https://github.com/AvaloniaUI/Avalonia.Samples/tree/main/src/Avalonia.Samples/Testing/TestableApp.Headless.XUnit)
 
 # Search and Sorting
+## Searching Algorithms
+- The main goal of searching algorithms is to search if a specific number exists in a set. 
 
 
+### Sequential search
+### Binary search
+- Requires the set to be sorted before it can be searched.
+- 
+## Sorting Algorithms
+### Selection sort
+### Bubble sort
+### Merge sort
+### Quick sort
 # Multithreading
 [video](https://www.youtube.com/watch?v=88e9uMlLCf8&t=1174s)
 
@@ -926,7 +971,7 @@ Include:
 using System.Collections.Concurrent;
 ```
 
-### Locking Collections
+### Locking Collections ("Thread-Safe Collections")
 - Standard (generic) collections are not thread-safe for writing or enumeration. What this means is if you change a list for example, and you have another thread going through each item in the list (enumeration - for loop) and you change it in a different thread your program will either do something weird or will throw an exception.
     - This is done on purpose (why the collections are not thread-safe by default) as making a collection thread safe by locking is not for free. The disadvantage is that is makes it a little slower to compute. 
 
