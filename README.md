@@ -24,7 +24,7 @@
 - [Multithreading](#multithreading)
   - [Tasks and Async / Await](#tasks-and-async--await)
   - [Avalonia UI Thread](#avalonia-ui-thread)
-  - [Locking, Concurrent Collections](#locking-concurrent-collections)
+  - [Locking, Concurrent Collections](#locking)
   - [Task Cancellation, Task.WhenAll(), Periodic Timer](#task-cancellation-taskwhenall-periodic-timer)
  
 
@@ -129,7 +129,7 @@ var car = new Car(new Engine());
 
 # Design Patterns
 [video](https://www.youtube.com/watch?v=rylaiB2uH2A&t=6321s)
-
+[link](https://www.dofactory.com/net/design-patterns)  
 There are 3 categories of design patterns:
 1. Creational
 	- Singleton
@@ -144,9 +144,11 @@ There are 3 categories of design patterns:
 
 
 ## Singleton
-- A class of which only a single instance can exist
+- A class of which only a single instance can exist.
+
 ## Facade
-- The primary objective of the Facade pattern is to provide a simplified interface to a complex subsyste, reducing client-side complexity.
+- The primary objective of the Facade pattern is to provide a simplified interface to a complex subsystem, reducing client-side complexity.
+    - Note: The word "interface" in the definition does mean it requires interfaces. It can be implemented using regular classes.
 
 ## Command
 - Is part of the MVVM toolkit
@@ -243,7 +245,8 @@ public class Program
 
 
 # Collections
-
+[video1](https://www.youtube.com/watch?v=RWXehFD_KSw)  
+In order to work with the collections (besides arrays), you must include:
 ``` cs
 using System.Collections.Generic;
 ```
@@ -252,16 +255,36 @@ using System.Collections.Generic;
 ```
 
 ## Arrays
-``` cs
-// Arrays
+- Fixed size collection. When you define an array, you have to define its size and it cannot be changed later.
+```cs
+// Character array
+char[] hello; // Declare
+
+char[] hello = new char[5]; // Define
+
+// Initialize
+hello[0] = 'h';
+hello[1] = 'e';
+hello[2] = 'l';
+hello[3] = 'l';
+hello[4] = 'o';
+
+// Array initilization syntax
+var hello = new[]
+{
+    'h','e','l','l','o'
+};
 ```
 
-``` cs
-// Generics
-/* 
-Generics provide a way to define classes, methods, 
+Getting the legnth
+- Returns the amount of elements within the array, NOT the size of the array.
+```cs
+hello.Length;
+```
+## Generics
+- Generics provide a way to define classes, methods, 
 and interfaces with a placeholder for the data type.
-*/
+``` cs
 class List<T>
 {
     public T[] items {get; set;}
@@ -269,22 +292,103 @@ class List<T>
 ```
 
 ## Lists
-``` cs
-// Lists
-/*
 - Dynamic arrays
-T is the generic type
-*/
+```cs
+// Creating an empty list
+var emptylist = new List<string>();
+
+// Prepopulating a list
+var names = new[]
+{
+    "John","Jane"
+};
+
+var nameslist = new List<string>(names);
+
+// Initilizer syntax
+var list = new List<string>
+{
+    "John","Jane"
+};
 ```
+
+Adding items to a list
+- Tip: We can start by creating an empty list and add items to it afterwards.
+```cs
+var list3 = new List<string>();
+list3.Add("John");
+```
+Return list size with:
+```cs
+Console.WriteLine(list3.Count);
+```
+
+Adding multiple items to a list at once
+- The items that you want to add, need to be in a collection.
+```cs
+list3.AddRange(names); // Count is 3
+```
+
+Accessing specific entries using index notation
+```cs
+list3[0]; // Tim
+list3[1]; // John
+list3[2]; // Jane
+```
+
+Insert a new item at a certain position.
+- For the index, it has to be an index that has a value.
+- This will shift the existing items over after it inserts.
+```cs
+list3.Insert(2,"Sam");
+```
+
+Removing items from a list
+- It will start from the beginning of the collection(left to right), and will remove the first match (if there are multiple of the same).
+```cs
+list3.Remove("John");
+```
+
+Removing all specific items from a list
+```cs
+list3.RemoveAll(s => s=="John");
+```
+
+Removing at a specific index
+- The items to the right will shift to fill in the spot that was removed.
+```cs
+list3.RemoveAt(1);
+```
+
+Checking if a list contains a specific entry
+- Returns true or false
+```cs
+list3.Contains("Tim");
+```
+
+Finding the index of a specific item
+```cs
+list3.IndexOf("Tim");
+//list3.LastIndexOf();
+```
+
+Find items based upon a certain criteria
+- Returns the first item that matches the criteria.
+```cs
+list3.Find(s => s.StartsWith("T")); // Returns 1
+list3.FindAll(s => s.StartsWith("T")); // Returns all
+```
+
 
 
 ## Dictionary
 - A dictionary is generic, meaning the key and value can be of any data type (value type or reference type).
-
+- There are two ways to a initilize a dictionary and two ways to add key-value pairs.
 ``` cs
-
 // Creating an empty dictionary
 var types = new Dictionary<string,string>();
+// Make it case-insensitive by adding:
+// StringComparer.OrdinalIgnoreCase in the ()
 
 // Prepopulating a dictionary with predefined key-value pairs (syntax style 1)
 Dictionary<string, int> args = 
@@ -298,16 +402,98 @@ Console.WriteLine(args["Alice"]);
 // 25
 
 // Index notation predef (syntax style 2)
-
+var types = new Dictionary<string,string>
+{
+    ["txt"] = "notepad.exe"
+}
 ```
 
-## Queue
+```cs
+types["pdf"] = "acrobat.exe"
+types.Add("docx","winword.exe");
+```
+
+## Queue (FIFO)
+> FIFO: First In, First Out
+```cs
+// Creating an empty queue 
+var queue = new Queue<string>();
+```
+
+Adding items to a queue
+- Items have to be added one-by-one. If you had a collection of items that you want to add to the queue, then you would have to enumerate over that collection and add in each item one-by-one.
+```cs
+queue.Enqueue("Item1");
+queue.Enqueue("Item2");
+```
+
+Checking on queue
+```cs
+if(queue.Count > 0)
+
+// Using LINQ query
+if(queue.Any())
+```
 
 
+Peeking
+- Peek at the first item in the queue. 
+```cs
+queue.Peek()
+```
+- This returns the value without removing it from the queue.
+
+Removing items from a queue 
+```cs
+queue.Dequeue();
+```
+
+Removing all items from a queue.
+```cs
+queue.Clear();
+```
+
+## Stack (LIFO)
+> LIFO: Last In, First Out
+
+Creating an empty stack
+```cs
+// string stack
+var stack = new Stack<string>();
+
+// int stack
+Stack<int> stack = new Stack<int>();
+```
+
+Adding items to a stack
+```cs
+stack.Push("item1"); // Now the stack looks like: [item1]
+stack.Push("item2"); // Now the stack looks like: [item1, item2]
+
+stack.Push(10);  // Now the stack looks like: [10]
+stack.Push(20);  // Now the stack looks like: [10, 20]
+```
 
 
-## Stack
+Peek
+- Allows you to "peek" at the value of the last item in the stack. It will not remove that item.
+```cs
+stack.Peek();
+```
 
+
+Removing items from a stack
+- Removes the top(last) items first
+```cs
+stack.Pop();
+
+Console.WriteLine(stack.Pop());  // Pops and prints the top value
+```
+
+Removing all items from a stack.
+```cs
+stack.Clear();
+```
 ## Hashset
 - The hashset collection is rather specialized. It is not one that we use on a regular basis, however it provides a lot of useful functionality when need to work with multiple collections and you need to identify duplicate values. Its also useful when you need to remove all duplicate values from a collection or multiple collections.
 
@@ -978,7 +1164,7 @@ Include:
 ```cs
 using System.Collections.Concurrent;
 ```
-
+- Concurrent collections are not very different frmo normal collcetions, in terms of syntax and usage. Concurrent collections, however, are only useful for multithreaded applications. In addition, only if you plan on using the collection over multiple threads. Otherwise the normal collections are stil the way to go if you plan on using it with just one thread.
 ### Locking Collections ("Thread-Safe Collections")
 - Standard (generic) collections are not thread-safe for writing or enumeration. What this means is if you change a list for example, and you have another thread going through each item in the list (enumeration - for loop) and you change it in a different thread your program will either do something weird or will throw an exception.
     - This is done on purpose (why the collections are not thread-safe by default) as making a collection thread safe by locking is not for free. The disadvantage is that is makes it a little slower to compute. 
