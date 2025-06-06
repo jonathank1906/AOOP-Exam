@@ -293,6 +293,24 @@ class List<T>
 
 ## Lists
 - Dynamic arrays
+
+Full example:
+```cs
+var words = new List<string>(); // New string-typed list
+
+var printWords = () => {foreach (string s in words) Console.WriteLine (s);};
+
+words.Add ("melon");
+words.Add ("avocado");
+words.AddRange (["banana", "plum"]);
+printWords();
+// Output:
+// melon
+// avocado
+// banana
+// plum
+```
+Introduction starts here
 ```cs
 // Creating an empty list
 var emptylist = new List<string>();
@@ -377,8 +395,37 @@ Find items based upon a certain criteria
 ```cs
 list3.Find(s => s.StartsWith("T")); // Returns 1
 list3.FindAll(s => s.StartsWith("T")); // Returns all
+
+// Remove all strings starting in 'n':
+words.RemoveAll(s => s.StartsWith ("n"));
 ```
 
+**Printing**
+```cs
+Console.WriteLine(words [0]); // first word
+Console.WriteLine(words [words.Count - 1]); // last word
+foreach (string s in words) Console.WriteLine (s); // all words
+```
+**Convert entire list to uppercase**
+```cs
+List<string> upperCaseWords = words.ConvertAll (s => s.ToUpper());
+foreach (string s in upperCaseWords) Console.WriteLine (s);
+// Output:
+// PEACH
+// LEMON
+// BANANA
+// PLUM
+```
+**Convert string to length**
+```cs
+List<int> lengths = words.ConvertAll (s => s.Length);
+foreach (int s in lengths) Console.WriteLine (s);
+// Output:
+// 5
+// 5
+// 6
+// 4
+```
 
 
 ## Dictionary
