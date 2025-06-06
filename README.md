@@ -44,18 +44,35 @@ Implemented using:
 
 ## Inheritance
 > C# supports single inheritance only, meaning a class can only inherit from a single class.
+### Abstract Classes
+- Abstract classes cannot be instantiated, meaning it is not allowed to create a new object using `new`.
+    - However, only the concrete subclasses can be instantiated. They must implement all abstract members; otherwise, they stay abstract
+- That means theoretically you could have multiple abstract classes inheriting from another abstract class but at some point you will have a non-abstract class that you can create an object from.
+
 
 ## Polymorphism
 - Overriding can be used on properties also!
+- Implemented using:
+    - Interfaces
+    - Types
+
+Upcasting and downcasting
 ### Method Overriding (Run-Time Polymorphism)
+- Both methods have the same signature
+- `virtual` base class
+- `override` derived class
+
+- Only works with inheritance.
 
 ### Method Overloading (Compile-Time Polymorphism)
+- `new`
 
-Implemented using:
+(2 options): Works in the same class and with inheritance:
+- The method parameters dont have to match in the derived class, they can be different.
+- You can overload a method within the same class (multiple methods with same name, but different parameters).
 
-- Interfaces
-- Types
 
+Method overloading is fine for a single class. But for multiple layers of inheritance it should be avoided.
 
 
 # SOLID Principles
@@ -229,9 +246,6 @@ public class Program
 - You don’t instantiate stuff inside of a class, but outside of a class and then you give it to the class. Meaning, you inject the dependency of the class from outside.
 
 # Classes, Constructors & Object Initializers
-
-## Abstract Classes
-- Abstract classes cannot be instantiated.
 
 # Properties
 
