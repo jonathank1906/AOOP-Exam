@@ -1233,19 +1233,32 @@ Dispatcher.UIThread.Post(() => SetText(text));
 var result = await Dispatcher.UIThread.InvokeAsync(GetText);
 ```
 
-# Race Conditions
+
+# Thread Safety
+- Code that can have race conditions is usually called "not thread-safe". Goal is to avoid potential race conditions. 
+
+## Race Conditions
 - Race conditions occur when you have multiple threads that access some shared data at the same time. If at least once thread changes something about the data, you can have a race condition.
 - Essentially, the threads race through the program and trigger operations in an unpredictable order. We usually dont like nondeterministic behavior in code because it is unpredicatable. You want your code to do what you programmed it to and not do something random unless you intentionally do so.
     - It is also hard to find bugs out of unpredictable code.     
 - Code that can have race conditions is called **not thread-safe**.
 
-# Thread Safety
-- Code that can have race conditions is usually called "not thread-safe". Goal is to avoid potential race conditions. 
-
 
 
 ## Locking
-Locking is directly related to thread safety. Locking ensures that only one thread can ever enter this part of the code at the same time. So, multiple threads are coming, but as soon as one thread goes in there, no other threads are allowed.
+Locking is directly related to thread safety. 
+
+
+Locking is done using a "Locked block":
+```cs
+lock (_counterLock)
+{
+    sharedCounter++;
+}
+```
+- Locking ensures that only one thread can ever enter this part of the code at the same time (the locked block). So, multiple threads are coming, but as soon as one thread goes in there, no other threads are allowed.
+- Any object in C# can be locked with the `lock` keyword. So any shared object can be used as a lock.
+    - It is best practice to create a new lock object, intead of 
 
 ### Dead Lock
 - An issue can arrise with locking, which is called dead locks. How this happens is basically when you lock something with one thread and then lock another thing with the other thread and then lock the threads each other lock eachother and now they can never unlock.
@@ -1306,6 +1319,10 @@ Task task2 = Task.Run(() => CountWords(new[] { "orange", "banana", "orange" }));
 Task task3 = Task.Run(() => CountWords(new[] { "apple", "orange", "grape" }));
 
 await Task.WhenAll(task1, task2, task3);
+```
+Also use `WhenAll()` with a collection of tasks:
+```cs
+List<Task> downloadTasks = new List<Task>();
 ```
 
 ## Periodic Timer
