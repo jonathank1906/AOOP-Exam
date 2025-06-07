@@ -1236,6 +1236,9 @@ var result = await Dispatcher.UIThread.InvokeAsync(GetText);
 
 # Thread Safety
 - Code that can have race conditions is usually called "not thread-safe". Goal is to avoid potential race conditions. 
+> Two options to make your code thread safe:  
+>1. Lock yourself (fields or collections).
+>2. If working with a collection (list, dictinoary), use the thread safe version, which are concurrent collections.
 
 ## Race Conditions
 - Race conditions occur when you have multiple threads that access some shared data at the same time. If at least once thread changes something about the data, you can have a race condition.
@@ -1258,8 +1261,8 @@ lock (_counterLock)
 ```
 - Locking ensures that only one thread can ever enter this part of the code at the same time (the locked block). So, multiple threads are coming, but as soon as one thread goes in there, no other threads are allowed.
 - Any object in C# can be locked with the `lock` keyword. So any shared object can be used as a lock.
-    - It is best practice to create a new lock object, intead of 
-
+    - Tecnically you can use the shared variable and lock that. However, it is best practice to create a new lock object and use it to lock, not the variable. In order to be completely "safe", this lock object should be `readonly` so it can never be changed.
+- Repetition: Lock everything that can be modified by multiple theads. If it is only being read by multiple threads, then there is no need to lock it.
 ### Dead Lock
 - An issue can arrise with locking, which is called dead locks. How this happens is basically when you lock something with one thread and then lock another thing with the other thread and then lock the threads each other lock eachother and now they can never unlock.
 - The easiest way to avoid it is by always locking in the same order (locks are inside of each other).
@@ -1267,14 +1270,21 @@ lock (_counterLock)
 
 
 ## Concurrent Collections
+- Standard (generic) collections are not thread-safe for writing or enumeration. What this means is if you change a list for example, and you have another thread going through each item in the list (enumeration - for loop) and you change it in a different thread your program will either do something weird or will throw an exception.
+    - This is done on purpose (why the collections are not thread-safe by default) as making a collection thread safe by locking is not for free. The disadvantage is that is makes it a little slower to compute.
+
+> When doing tasks involving a collection, instead of using the traditional collection which are not thread safe, use the thread safe version called **concurrent collections**.
+We want to avoid the issue for example:
+- When looping through a list, while another thread adds an item or different items, problems might occur, might throw an exception.
+    - Again, multiple threads modifing the same data in a collection.
+
 Include:
 ```cs
 using System.Collections.Concurrent;
 ```
-- Concurrent collections are not very different frmo normal collcetions, in terms of syntax and usage. Concurrent collections, however, are only useful for multithreaded applications. In addition, only if you plan on using the collection over multiple threads. Otherwise the normal collections are stil the way to go if you plan on using it with just one thread.
-### Locking Collections ("Thread-Safe Collections")
-- Standard (generic) collections are not thread-safe for writing or enumeration. What this means is if you change a list for example, and you have another thread going through each item in the list (enumeration - for loop) and you change it in a different thread your program will either do something weird or will throw an exception.
-    - This is done on purpose (why the collections are not thread-safe by default) as making a collection thread safe by locking is not for free. The disadvantage is that is makes it a little slower to compute. 
+- Concurrent collections are not very different from normal collcetions, in terms of syntax and usage. Concurrent collections, however, are only useful for multithreaded applications. In addition, only if you plan on using the collection over multiple threads. Otherwise the normal collections are still the way to go if you plan on using it with just one thread.
+
+ 
 
 Concurrent collections:  
 `ConcurrentBag<T>` 
