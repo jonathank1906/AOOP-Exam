@@ -1129,10 +1129,34 @@ Call `Task.Run()`
 
 `task.Wait();`
 
+You can write async methods almost in the same way synchronous methods would be written.
+
+
+Step 0: 
+The top-level code should have an async method to call the async task in Step 1.
+
+
+Step 1:
+Keep the return type. Then add Task<return type>. For example Task<int> instead of int.
+
+If the method should be void, dont write void.
+
+Add the async keyword in the beginning.
+
+
+
+Even though the method is declared to return Task<int>, it’s written as if it returned int directly. The return value automatically becomes the result of method’s task.
+
 ### Task Exceptions
 
 
 ## async and await
+- The most important feature specific to async methods is the `await` operator. In fact, the `async` modifier just makes the `await` work, and if a method is marked async and does not have any `await` in it’s body, compiler issues a warning.
+
+| Sync declaration | Async declaration |
+|----|-----------|
+| `void DoWork()`  | `async Task DoWorkAsync()` |
+| `int DoWork()`  | `async Task<int> DoWorkAsync()` |
 
 ### async Keyword
 
