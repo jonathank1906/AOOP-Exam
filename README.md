@@ -1147,6 +1147,7 @@ Add the async keyword in the beginning.
 
 Even though the method is declared to return Task<int>, it’s written as if it returned int directly. The return value automatically becomes the result of method’s task.
 
+- It is possible to make a `List`, or even a `Dictionary` of tasks. 
 ### Task Exceptions
 
 
@@ -1232,10 +1233,18 @@ Dispatcher.UIThread.Post(() => SetText(text));
 var result = await Dispatcher.UIThread.InvokeAsync(GetText);
 ```
 
-## Locking
-**Thread Safety**
+# Race Conditions
+- Race conditions occur when you have multiple threads that access some shared data at the same time. If at least once thread changes something about the data, you can have a race condition.
+- Essentially, the threads race through the program and trigger operations in an unpredictable order. We usually dont like nondeterministic behavior in code because it is unpredicatable. You want your code to do what you programmed it to and not do something random unless you intentionally do so.
+    - It is also hard to find bugs out of unpredictable code.     
+- Code that can have race conditions is called **not thread-safe**.
+
+# Thread Safety
 - Code that can have race conditions is usually called "not thread-safe". Goal is to avoid potential race conditions. 
 
+
+
+## Locking
 Locking is directly related to thread safety. Locking ensures that only one thread can ever enter this part of the code at the same time. So, multiple threads are coming, but as soon as one thread goes in there, no other threads are allowed.
 
 ### Dead Lock
@@ -1277,15 +1286,27 @@ Here we actually want to run multiple things in parallel.
     - Note: if you are just canceling a task from inside the task itself then you can do something simpler like break.
 
 ## Concurrent Tasks - Task.WhenAll() 
+- `Task.WhenAll()` used when you have multiple tasks running concurrently and you want to wait for all of them to complete. See the example below or when having a collection of tasks.
+
 - We can manage concurrent asycnhronous operations by using `Task.WhenAll()`
 - It allows you to execute multiple tasks at the same time and it waits for all of them to be finished.
 
+- `Task.WhenAll()` is not Needed for a single task, so if you only have one task, you can just await it directly.
 Downsides:
 - Runs in any order, which cant be tracked. The problem with this is that often processes have to executed in a certain order.
     - No exception handling feedback. It cannot be determined which task threw the exception.
 
 It ok to use for:
 - Fire-and-forget tasks, where the tasks can be executed in any order. It runs tasks in parallel. Saves time.
+
+```cs
+// Simulate processing data sources in parallel
+Task task1 = Task.Run(() => CountWords(new[] { "apple", "banana", "apple" }));
+Task task2 = Task.Run(() => CountWords(new[] { "orange", "banana", "orange" }));
+Task task3 = Task.Run(() => CountWords(new[] { "apple", "orange", "grape" }));
+
+await Task.WhenAll(task1, task2, task3);
+```
 
 ## Periodic Timer
 - Used for when you want a task to occur for example every 5 seconds or every 5 hours. This could be a task that keeps downloading something or keeps updating something from a database.
