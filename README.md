@@ -46,7 +46,7 @@ Implemented using:
 > C# supports single inheritance only, meaning a class can only inherit from a single class.
 ### Abstract Classes
 - Abstract classes cannot be instantiated, meaning it is not allowed to create a new object using `new`.
-    - However, only the concrete subclasses can be instantiated. They must implement all abstract members; otherwise, they stay abstract
+    - However, only the concrete subclasses can be instantiated. They must implement all abstract members; otherwise, they stay abstract.
 - That means theoretically you could have multiple abstract classes inheriting from another abstract class but at some point you will have a non-abstract class that you can create an object from.
 
 
@@ -640,7 +640,7 @@ var output = from b in books
 ```
 
 ## Where  
-> Operates on the rows. A Where operation results in the same # of columns but fewer rows.
+> Operates on the rows. A `Where` operation results in the same # of columns but fewer rows.
 - "Give me the items from this list WHERE my condition is met"
 - Used for SELECTION filtering
 - Chooses the items.
@@ -793,6 +793,64 @@ foreach (var name in sortedCheapProductsMethod)
 
 ## Other LINQ queries:  
 ### Join
+- `Join` is used when you have two databases that you want to combine. One database could contain the main fields and the other could contain several IDs.
+    - **Important:** Both databases need to share some form of similar information (such as an ID) so they can be connected properly. Again, you match records from two sources using a shared value, typically an ID or another key field.
+
+Example:
+```cs
+List<SalesReportItem> salesReport = [];
+
+List<Product> Products = 
+[
+    new Product { Id = 1, Name = "Laptop", Price = 899.99m, Category = "Electronics" },
+    new Product { Id = 2, Name = "Smartphone", Price = 599.99m, Category = "Electronics" },
+    new Product { Id = 3, Name = "Tablet", Price = 499.99m, Category = "Electronics" },
+    new Product { Id = 4, Name = "Shoes", Price = 59.99m, Category = "Apparel" }
+];
+
+List<Sale> Sales = 
+[
+    new Sale(1, 5, new DateTime(2024, 3, 1)),  // 5 Laptops sold
+    new Sale(2, 10, new DateTime(2024, 3, 2)), // 10 Smartphones sold
+    new Sale(3, 7, new DateTime(2024, 3, 3)),  // 7 Tablets sold
+    new Sale(1, 3, new DateTime(2024, 3, 4)),  // 3 more Laptops sold
+    new Sale(4, 20, new DateTime(2024, 3, 5))  // 20 Shoes sold
+];
+
+  
+SalesReport = Sales!.Join(Products!, 
+    sale => sale.ProductId,  
+    product => product.Id, 
+    (sale, product) => new SalesReportItem
+    {
+        Name = product.Name,
+        Category = product.Category,
+        Price = product.Price,
+        QuantitySold = sale.QuantitySold,
+        TotalRevenue = sale.QuantitySold * product.Price,
+        Date = sale.Date
+    }).ToList();
+```
+- Sales is the outer sequence (the one you're iterating through first)
+- Products is the inner sequence (the one you're matching against).
+- Note: The order can be reversed, but make sure to adjust the parameters correctly.
+
+General structure breakdown:
+```cs
+outer.Join(
+    inner,  
+    outerKeySelector,
+    innerKeySelector,
+    resultSelector
+)
+```
+- Outer sequence: "What you're starting with"
+- Inner sequence: "What you're matching against"
+- Outer key selector: "How to get the key from the sale"
+- Inner key selector: "How to get the key from the product"
+- Result selector: "How to combine both into a new object"
+
+- The `!`
 ### Contains:
 ```cs
 var query = names.Where(x => x.Contains("a"));
@@ -985,15 +1043,15 @@ Setting up a new Avalonia MVVM project:
 2. Open this folder in VS Code
 3. In the terminal, create a new Avalonia MVVM project: `dotnet new avalonia.mvvm`
 
-## Other
-Connecting view to viewmodel.  
+## ViewModel
+Connecting view to viewmodel:  
 Top of the view (`Window` or `UserControl`):
 ``` xml
 xmlns:vm="using:Layout.ViewModels"
 x:Class="Layout.Views.MainWindow"
 x:DataType="vm:MainWindowViewModel"
 ```
-
+- The ViewModel class has `partial` in it.
 
 
 ## UI Elements
@@ -1015,10 +1073,11 @@ Examples:
 | Stop  | StopCommand |
 
 ## `[ObservableProperty]`
-- Requires `using CommunityToolkit.Mvvm.ComponentModel;` at the top of the viewmodel
+- Requires `using CommunityToolkit.Mvvm.ComponentModel;` at the top of the viewmodel. In addition, the class must inherit from `ObservableObject` (or from a custom base class that inherits from it, such as `ViewModelBase`).
 - Observable properties can be updated at any time while the application is running. When you change their value in the ViewModel, the UI will automatically update to reflect the new value.
     - It automatically implements `INotifyPropertyChanged`.
 - For static/constant values, a regular property is fine.
+- Observable properties are setup in the ViewModel.
 
 # Data-Binding
 - Data binding is typically done between the View and ViewModel. However, it is also sometimes necessary to do bindig between the View and the code behind.
