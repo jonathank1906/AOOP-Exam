@@ -1152,9 +1152,61 @@ This can be solved by: If you want to display multiple UI elements, you must pla
 
 # Unit Testing and Avalonia Headless Testing
 ## Xunit
+
+### Setup
 To setup Xunit testing:
 - Have 2 folders
-- 1 folder with the name of the other folder + .Tests
+    - One with the name
+    - Another with the name + .Tests
+
+
+Sample folder structure using a console application:
+```
+CalculatorSolution/
+├── CalculatorSolution.sln
+├── CalculatorApp/
+│   ├── CalculatorApp.csproj
+│   └── Program.cs
+└── CalculatorApp.Tests/
+    ├── CalculatorApp.Tests.csproj
+    └── CalculatorTests.cs
+```
+
+**1. Create the solution and projects**  
+- Run all these commands from your root project directory
+```
+dotnet new sln -n CalculatorSolution
+dotnet new console -n CalculatorApp
+dotnet new xunit -n CalculatorApp.Tests
+```
+
+**2. Add projects to the solution**  
+- Run these from the root directory where `CalculatorSolution.sln` is located
+    - Also use the solution explorer extension.
+```
+dotnet sln add CalculatorApp/CalculatorApp.csproj
+dotnet sln add CalculatorApp.Tests/CalculatorApp.Tests.csproj
+```
+
+**3. Add reference from test project to main project**
+- Run this from inside the `CalculatorApp.Tests` directory
+- Connecting the test project to the main application.
+```
+# Move into the test project directory
+cd CalculatorApp.Tests
+
+# Add reference to main project
+dotnet add reference ../CalculatorApp/CalculatorApp.csproj
+
+# Return to root directory (optional)
+cd ..
+```
+- What this does is create a reference inside the `CalculatorApp.Tests.csproj` that looks like this:
+```
+<ItemGroup>
+    <ProjectReference Include="..\CalculatorApp\CalculatorApp.csproj" />
+</ItemGroup>
+```
 
 ## Avalonia Headless Testing
 [Avalonia Headless Testing](https://github.com/AvaloniaUI/Avalonia.Samples/tree/main/src/Avalonia.Samples/Testing/TestableApp.Headless.XUnit)
