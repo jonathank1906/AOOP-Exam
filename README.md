@@ -30,14 +30,16 @@
 
 # OO Principles
 ## Abstraction
-Abstraction is the idea of hiding complexity.
-Abstract classes are one way to achieve it, it can also be implemented using: 
-- Interfaces
+### Conceptually:
+Abstraction is a design principle. Abstraction is the idea of hiding complexity by exposing only essential features.
 
-## Encapsulation
-Encapsulation protects data
+Abstract classes are a tool that supports both abstraction and inheritance — but their most defining characteristic is that they require inheritance to be useful.
 
 Implemented using:
+- Abstract classes 
+- Interfaces
+## Encapsulation
+Encapsulation protects data. Implemented using:
 
 - Properties
 - Access modifiers
@@ -45,9 +47,14 @@ Implemented using:
 ## Inheritance
 > C# supports single inheritance only, meaning a class can only inherit from a single class.
 ### Abstract Classes
+- Abstract classes are incomplete by design and they must inherited by a derived class.
 - Abstract classes cannot be instantiated, meaning it is not allowed to create a new object using `new`.
     - However, only the concrete subclasses can be instantiated. They must implement all abstract members; otherwise, they stay abstract.
 - That means theoretically you could have multiple abstract classes inheriting from another abstract class but at some point you will have a non-abstract class that you can create an object from.
+
+Rules to follow:
+- Cannot declare abstract fields.
+    - Only methods, properties, indexers, and events can be `abstract`.
 
 
 ## Polymorphism
@@ -79,20 +86,27 @@ Method overloading is fine for a single class. But for multiple layers of inheri
 [link1](https://bool.dev/blog/detail/solid-principles)
 [video](https://www.youtube.com/watch?v=rylaiB2uH2A&t=6321s)
 ## S - Single Responsibility Principle (SRP)
-> A class should have only one reason to change. In other words, a class should only have one responsibility.
-- A class should oonly have 1 reason/place where it can change.
-- 	If a class has 2 places where it can change then it voilates s
-- it can be reslved by splotting it into a SEPERATE class COVERT it to some business logic or service.
+> A class should have only one reason to change. In other words, a class should only have one responsibility or purpose.
+The issue (violation):
+- If a class has 2 reasons/places where it can change (if something has to be updated later on) then it voilates SRP.
+- A single class has too many responsibilites.
+    - `User` class contains 2 reponsibilites: logic for registering a user and holding user data fields. 
+
+How its solved:
+- It can be resolved by splitting it into a seperate class.
+    - `User` class is refactored such that it is solely responsible for representing user data. The user registration logic is moved into a new class called `UserService`.
+- A class should only have 1 reason/place where it can change.
 
 ## O - Open/Closed Principle (OCP)
-> Software entities should be open for extension but closed for modification. This means you should be able to add new functionality without altering existing code.
+> Software entities should be open for extension but closed for modification.
+- This means you should be able to add new functionality without altering existing code.
 Superclass: Higher up class.
-Subclass: Lower class. This inherits from the superclass.
+Subclass: Lower class. This inherits from the superclass
 
  The issue (violation):
  - The code has to be edited in two places if you want to add a new feature.
 
-- Encoursges abstraction and polymorphism to achieve this. inheritance or composition
+- Encourages abstraction and polymorphism to achieve this. inheritance or composition
 
 1. Create an abstract class.
 2. Create concrete classes that inherit from this abstract class.
@@ -108,13 +122,12 @@ The problem (violation):
 Similar class inherits from another class.
 
 How its solved:
-- Remove the complex inheritance (the 3rd level)
-- Replace it to only have a 2nd level inheritance
+- Remove the complex inheritance (the 3rd level).
+- Replace it to only have a 2nd level inheritance.
 
 ## I - Interface Segregation Principle (ISP)
 > Clients should not be forced to depend on interfaces they do not use.
-
-- The client is simply the classes that are using the interface.
+- From the definition, the client is simply the classes that are using the interface.
 
 The problem (violation):
 - A class is forced to implment the methods defined in an interface. The problem arises when this class has to implement the methods it doesnt need/or that are invalid/irrelevant.
@@ -145,7 +158,8 @@ var car = new Car(new Engine());
 
 
 # Design Patterns
-[video](https://www.youtube.com/watch?v=rylaiB2uH2A&t=6321s)
+[video](https://www.youtube.com/watch?v=rylaiB2uH2A&t=6321s),
+[video2](https://www.youtube.com/watch?v=YM_Xl77bVWw),
 [link](https://www.dofactory.com/net/design-patterns)  
 There are 3 categories of design patterns:
 1. Creational
@@ -246,6 +260,7 @@ public class Program
 - You don’t instantiate stuff inside of a class, but outside of a class and then you give it to the class. Meaning, you inject the dependency of the class from outside.
 
 # Classes, Constructors & Object Initializers
+## Object Initializers
 
 # Properties
 
@@ -887,7 +902,7 @@ Console.WriteLine (p); // Petey
 ```
 
 ## IComparable
-- `IComparable` is an interface which can be used for sorting.
+- `IComparable` is an interface which can be used for sorting. When your class implements this interface, it can ....
 - You are forced to implement the `CompareTo()` method.
 
 # File Handling (Read and Write)
