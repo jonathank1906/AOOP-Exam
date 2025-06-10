@@ -46,15 +46,25 @@ Encapsulation protects data. Implemented using:
 
 ## Inheritance
 > C# supports single inheritance only, meaning a class can only inherit from a single class.
+- The derived class copies all members from the base class. Most often you dont want the method to act the same way as in the base class, so therefore a way to override it is needed.
+- When a class inherits from a base class, it gains access to all non-private members of the base class:
+    - `public` - accessible everywhere
+    - `protected` - accessible in derived classes only
+    - `internal` - accessible in the same assembly
+    - `private` - not accessible in the derived class
+
 ### Abstract Classes
+- The `abstract` keyword can be applied to classes, properties, and methods.
 - Abstract classes are incomplete by design and they must inherited by a derived class.
 - Abstract classes cannot be instantiated, meaning it is not allowed to create a new object using `new`.
     - However, only the concrete subclasses can be instantiated. They must implement all abstract members; otherwise, they stay abstract.
 - That means theoretically you could have multiple abstract classes inheriting from another abstract class but at some point you will have a non-abstract class that you can create an object from.
 
 Rules to follow:
-- Cannot declare abstract fields.
+- Fields (variables) cannot be marked as abstract.
     - Only methods, properties, indexers, and events can be `abstract`.
+- An abstract class can have methods with or without implementation. Concrete members (fully implemented methods, properties, fields, etc.)
+- A class can still be `abstract` even if it has no abstract members.
 
 
 ## Polymorphism
