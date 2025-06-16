@@ -1,0 +1,26 @@
+[
+  {
+    "id": 101,
+    "name": "Alice Chen",
+    "position": "Software Engineer",
+    "salary": 85000,
+    "skills": ["C#", "Python", "SQL"],
+    "isFullTime": true
+  },
+  {
+    "id": 102,
+    "name": "Bob Johnson",
+    "position": "Data Analyst",
+    "salary": 75000,
+    "skills": ["Python", "R", "Tableau"],
+    "isFullTime": true
+  },
+  {
+    "id": 103,
+    "name": "Carol Williams",
+    "position": "UX Designer",
+    "salary": 78000,
+    "skills": ["Figma", "Photoshop", "User Research"],
+    "isFullTime": false
+  }
+]

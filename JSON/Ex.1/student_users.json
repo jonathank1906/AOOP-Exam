@@ -1,0 +1,23 @@
+[
+  {
+    "Id": 1,
+    "Username": "student1",
+    "Name": "John",
+    "Surname": "Doe",
+    "EnrolledSubjects": [101, 205, 307]
+  },
+  {
+    "Id": 2,
+    "Username": "student2",
+    "Name": "Jane",
+    "Surname": "Smith",
+    "EnrolledSubjects": [102, 208]
+  },
+  {
+    "Id": 3,
+    "Username": "student3",
+    "Name": "Alex",
+    "Surname": "Johnson",
+    "EnrolledSubjects": [101, 205, 307, 410]
+  }
+]

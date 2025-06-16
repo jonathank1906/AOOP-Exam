@@ -1,0 +1,6 @@
+https://www.nuget.org/packages/CsvHelper
+dotnet add package CsvHelper --version 33.0.1
+
+
+https://www.nuget.org/packages/CommunityToolkit.Mvvm
+dotnet add package CommunityToolkit.Mvvm --version 8.4.0
